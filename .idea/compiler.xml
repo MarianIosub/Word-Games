@@ -9,5 +9,8 @@
         <module name="Word-Games" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="Word-Games" target="8" />
+    </bytecodeTargetLevel>
   </component>
 </project>
