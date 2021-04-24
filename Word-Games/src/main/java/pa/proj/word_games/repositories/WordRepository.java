@@ -1,11 +1,13 @@
 package pa.proj.word_games.repositories;
 
+import pa.proj.word_games.controllers.WordController;
 import pa.proj.word_games.managers.EntityFactoryManager;
 import pa.proj.word_games.models.Word;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.TypedQuery;
+import java.util.List;
 
 /**
  * Repository pentru clasa "Word" (respectiv, tabela "words").
@@ -46,6 +48,43 @@ public class WordRepository implements AbstractRepository<Word>
         return numberOfEntries;
     }
 
+    /**
+     * Cauta in baza de date cuvinte care incep cu un anumit pattern.
+     * @param pattern Pattern-ul.
+     * @return Lista cuvintelor gasite.
+     */
+    public List<Word> findByStartPattern(String pattern)
+    {
+        EntityManager entityManager = EntityFactoryManager.getInstance().createEntityManager();
+
+        String query = "SELECT w FROM Word w WHERE w.text LIKE ?1";
+        TypedQuery<Word> typedQuery = entityManager.createQuery(query, Word.class);
+        typedQuery.setParameter(1,  pattern + "%");
+
+        List<Word> listOfWords = null;
+        try
+        {
+            listOfWords = typedQuery.getResultList();
+        }
+        catch(Exception ignored)
+        { }
+
+        // Caut si fara diacritici
+        if(listOfWords == null)
+        {
+            typedQuery.setParameter(1,  WordController.stringWithoutDiacritics(pattern) + "%");
+            try
+            {
+                listOfWords = typedQuery.getResultList();
+            }
+            catch(Exception ignored)
+            { }
+        }
+
+        entityManager.close();
+        return listOfWords;
+    }
+
     @Override
     public Word findById(int id)
     {
@@ -83,6 +122,18 @@ public class WordRepository implements AbstractRepository<Word>
         }
         catch(Exception ignored)
         { }
+
+        // Caut fara diacritici
+        if(word == null)
+        {
+            typedQuery.setParameter(1, WordController.stringWithoutDiacritics(text));
+            try
+            {
+                word = typedQuery.getSingleResult();
+            }
+            catch(Exception ignored)
+            { }
+        }
 
         entityManager.close();
         return word;

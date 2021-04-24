@@ -1,4 +1,6 @@
-import pa.proj.word_games.controllers.WordController;
+import pa.proj.word_games.games.FazanGame;
+import pa.proj.word_games.games.Player;
+import pa.proj.word_games.managers.EntityFactoryManager;
 
 public class Main
 {
@@ -6,23 +8,19 @@ public class Main
     {
         try
         {
-            try
-            {
-                System.out.println(WordController.verifyWordExistence("rdafasfa")?"Cuvantul a fost gasit!":"Cuvantul nu a fost gasit!");
-                System.out.println(WordController.extractEasyWord().getText());
-                System.out.println(WordController.extractMediumWord().getText());
-                System.out.println(WordController.extractHardWord().getText());
-                System.out.println(WordController.compareWords("Marioara","Mărioara"));
-                System.out.println(WordController.fazanRule("Mirela","lautari"));
-            }
-            catch(Exception exception)
-            {
-                exception.printStackTrace();
-            }
+            FazanGame fazanGame = new FazanGame();
+            fazanGame.addPlayer(new Player("Player1"));
+            fazanGame.addPlayer(new Player("Player2"));
+            fazanGame.startGame();
         }
         catch(Exception exception)
         {
             exception.printStackTrace();
+        }
+        finally
+        {
+            if(EntityFactoryManager.getInstanceWithoutInitialization() != null)
+                EntityFactoryManager.getInstance().close();
         }
     }
 }

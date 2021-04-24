@@ -18,12 +18,21 @@ public class EntityFactoryManager
     }
 
     /**
-     * @return Singura instanta de tip FactoryManager
+     * @return Singura instanta de tip FactoryManager, fara a o initializa in cazul in care este null.
+     */
+    public static EntityFactoryManager getInstanceWithoutInitialization()
+    {
+        return instance;
+    }
+
+    /**
+     * @return Singura instanta de tip FactoryManager.
      */
     public static EntityFactoryManager getInstance()
     {
         if(instance == null)
             instance = new EntityFactoryManager();
+
         return instance;
     }
 
@@ -34,5 +43,14 @@ public class EntityFactoryManager
     public EntityManager createEntityManager()
     {
         return entityManagerFactory.createEntityManager();
+    }
+
+    /**
+     * Inchide obiectul de tip EntityManagerFactory.
+     */
+    public void close()
+    {
+        if(entityManagerFactory.isOpen())
+            entityManagerFactory.close();
     }
 }

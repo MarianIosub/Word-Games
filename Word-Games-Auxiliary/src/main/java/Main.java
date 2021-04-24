@@ -15,7 +15,10 @@ public class Main
 
             System.out.println("Citesc si parsez continutul fisierului CSV...");
             String filePath = System.getProperty("user.dir") + "\\data\\cuvinte_romana.csv";
-            List<Word> listOfWords = CSVFileParser.readAndParseWordCSVFile(filePath);
+            List<String> listOfWordsString = CSVFileParser.readAndParseWordCSVFile(filePath);
+
+            System.out.println("Repar continutul fisierului csv...");
+            List<Word> listOfWords = CSVFileParser.repairCSV(listOfWordsString);
 
             System.out.println("Adaug continutul in baza de date...");
             dbConnection.addWordsInDatabase(listOfWords);

@@ -5,6 +5,7 @@ import pa.proj.word_games.models.Word;
 
 import java.io.IOException;
 import java.text.Normalizer;
+import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
@@ -38,7 +39,7 @@ public class WordController
      * @param text Un string.
      * @return Parametrul string dat, dar fara diacritice.
      */
-    private static String stringWithoutDiacritics(String text)
+    public static String stringWithoutDiacritics(String text)
     {
         text = Normalizer.normalize(text, Normalizer.Form.NFD);
         text = text.replaceAll("\\p{M}", "");
@@ -117,16 +118,23 @@ public class WordController
         return word1.equals(word2);
     }
 
-    public static boolean fazanRule(String previousWord, String nextWord)
+    /**
+     * Verifica daca exista in baza de date cuvinte care incep cu un anumit pattern.
+     * @param pattern Pattern-ul.
+     * @return true, daca exista cel putin un cuvant; false, altfel
+     */
+    public static boolean existsWordsWithStartPattern(String pattern)
     {
-        previousWord=previousWord.toLowerCase();
-        nextWord=nextWord.toLowerCase();
-        if ((previousWord.charAt(previousWord.length() - 2) == nextWord.charAt(0)) &&
-                (previousWord.charAt(previousWord.length() - 1) == nextWord.charAt(1)))
-        {
+        RepositoryManager repositoryManager = RepositoryManager.getInstance();
+        List<Word> result = repositoryManager.getWordRepository().findByStartPattern(pattern);
+        if(result != null && result.size() != 0)
             return true;
-        } else {
+
+        if(pattern.equals(stringWithoutDiacritics(pattern)))
             return false;
-        }
+
+        // Caut fara sa tin cont de diacritici
+        result = repositoryManager.getWordRepository().findByStartPattern(stringWithoutDiacritics(pattern));
+        return result != null && (result.size() != 0);
     }
 }
