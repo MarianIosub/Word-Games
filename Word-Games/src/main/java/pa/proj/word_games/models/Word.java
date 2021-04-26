@@ -30,4 +30,12 @@ public class Word
     public String getText() {
         return text;
     }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
 }
