@@ -14,8 +14,7 @@ public class Main
         hangMangame.hangManGame();*/
 
         //FAZAN
-        // TODO: comentarea codului de mai jos
-        try
+        /*try
         {
             FazanGame fazanGame = new FazanGame();
             fazanGame.addPlayer(new Player("Player1"));
@@ -30,6 +29,6 @@ public class Main
         {
             if(EntityFactoryManager.getInstanceWithoutInitialization() != null)
                 EntityFactoryManager.getInstance().close();
-        }
+        }*/
     }
 }
