@@ -24,11 +24,6 @@ public class FazanGame
     private Map<Player, Integer> playerScores;
 
     /**
-     * Retine numarul turei.
-     */
-    private int turnNumber;
-
-    /**
      * Verifica daca un cuvant este valid (daca apare in baza de date).
      * @param word Cuvantul verificat.
      * @return true, daca este valid; false, altfel
@@ -107,7 +102,7 @@ public class FazanGame
         System.out.println("Fazan Game - Runda " + roundNumber);
 
         playerTurnIndex = startingPlayerIndex;
-        turnNumber = 0;
+        int turnNumber = 0;
 
         List<String> usedWords = new ArrayList<>();
         String previousWord = String.valueOf(generateRandomAlphabetCharacter());
