@@ -54,8 +54,8 @@ public class FazanGame
      */
     private boolean verifyFazanRule(String previousWord, String actualWord)
     {
-        if(previousWord == null)
-            return true;
+        if(previousWord.length() == 1)
+            return previousWord.charAt(0) == actualWord.charAt(0);
 
         previousWord = WordController.stringWithoutDiacritics(previousWord);
         actualWord = WordController.stringWithoutDiacritics(actualWord);
@@ -86,6 +86,16 @@ public class FazanGame
     }
 
     /**
+     * Alege un caracter random din alfabetul latin.
+     * @return Caracterul ales.
+     */
+    private char generateRandomAlphabetCharacter() {
+        String alphabet = "abcdefghijklmnoprstuv";
+        Random random = new Random();
+        return alphabet.charAt(random.nextInt(alphabet.length()));
+    }
+
+    /**
      * Se joaca o runda din jocul Fazan.
      * @param roundNumber Numarul rundei actuale.
      * @throws IOException
@@ -95,24 +105,32 @@ public class FazanGame
     {
         // Initializarea variabilelor
         System.out.println("Fazan Game - Runda " + roundNumber);
+
         playerTurnIndex = startingPlayerIndex;
         turnNumber = 0;
-        String previousWord = null;
+
+        List<String> usedWords = new ArrayList<>();
+        String previousWord = String.valueOf(generateRandomAlphabetCharacter());
         String actualWord;
+
         Scanner scanner = new Scanner(System.in);
 
         // Jocul
         do {
             turnNumber++;
 
-            System.out.println("Tura jucatorului " + listOfPlayers.get(playerTurnIndex).getName());
+            System.out.println("\nTura jucatorului " + listOfPlayers.get(playerTurnIndex).getName());
+            if(previousWord.length() == 1)
+                System.out.println("Caracterul cu care trebuie sa inceapa cuvantul: " + previousWord);
+            else
+                System.out.println("Caracterele cu care trebuie sa inceapa cuvantul: " + previousWord.substring(previousWord.length() - 2));
             System.out.print(" >> ");
             actualWord = scanner.next();
 
             while(true)
             {
                 // Verific daca cuvantul este valid
-                if(!isValidWord(actualWord))
+                if(actualWord.length() < 3 || !isValidWord(actualWord))
                 {
                     System.out.println("Cuvantul nu este valid!");
                     System.out.print(" >> ");
@@ -122,6 +140,13 @@ public class FazanGame
                 else if(!verifyFazanRule(previousWord, actualWord))
                 {
                     System.out.println("Cuvantul nu respecta regula fazanului!");
+                    System.out.print(" >> ");
+                    actualWord = scanner.next();
+                }
+                // Verific daca a mai fost folosit cuvantul in aceasta runda
+                else if(usedWords.contains(actualWord.toLowerCase(Locale.ROOT)))
+                {
+                    System.out.println("Cuvantul a mai fost folosit!");
                     System.out.print(" >> ");
                     actualWord = scanner.next();
                 }
@@ -137,6 +162,7 @@ public class FazanGame
                     break;
             }
 
+            usedWords.add(actualWord.toLowerCase(Locale.ROOT));
             previousWord = actualWord;
             nextPlayerTurn();
 
@@ -176,32 +202,32 @@ public class FazanGame
             {
                 case 5:
                 {
-                    System.out.print("FAZAN");
+                    System.out.print("");
                     break;
                 }
                 case 4:
                 {
-                    System.out.print("FAZA");
+                    System.out.print("F");
                     break;
                 }
                 case 3:
                 {
-                    System.out.print("FAZ");
+                    System.out.print("FA");
                     break;
                 }
                 case 2:
                 {
-                    System.out.print("FA");
+                    System.out.print("FAZ");
                     break;
                 }
                 case 1:
                 {
-                    System.out.print("F");
+                    System.out.print("FAZA");
                     break;
                 }
                 case 0:
                 {
-                    System.out.print("");
+                    System.out.print("FAZAN");
                     break;
                 }
             }
@@ -282,7 +308,7 @@ public class FazanGame
         System.out.println(listOfPlayers.get(startingPlayerIndex).getName() + " a pierdut jocul de Fazan!");
     }
 
-    /* TODO: play cu alti jucatori (in retea) */
+    /* TODO: play cu alti jucatori (in retea) - setSoTimeout pentru timeout la introducerea cuvantului */
 
     /* TODO: play vs un computer (cand este un singur player)
     *       basically player-ul incepe, computerul interogheaza baza de date pentru cuvinte bune si ia unul random*/

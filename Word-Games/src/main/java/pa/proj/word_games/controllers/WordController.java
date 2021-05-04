@@ -126,8 +126,8 @@ public class WordController
     public static boolean existsWordsWithStartPattern(String pattern)
     {
         RepositoryManager repositoryManager = RepositoryManager.getInstance();
-        List<Word> result = repositoryManager.getWordRepository().findByStartPattern(pattern);
-        if(result != null && result.size() != 0)
+        Integer result = repositoryManager.getWordRepository().findByStartPattern(pattern);
+        if(result == 1)
             return true;
 
         if(pattern.equals(stringWithoutDiacritics(pattern)))
@@ -135,6 +135,6 @@ public class WordController
 
         // Caut fara sa tin cont de diacritici
         result = repositoryManager.getWordRepository().findByStartPattern(stringWithoutDiacritics(pattern));
-        return result != null && (result.size() != 0);
+        return result == 1;
     }
 }

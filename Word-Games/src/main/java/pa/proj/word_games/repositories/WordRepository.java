@@ -51,38 +51,38 @@ public class WordRepository implements AbstractRepository<Word>
     /**
      * Cauta in baza de date cuvinte care incep cu un anumit pattern.
      * @param pattern Pattern-ul.
-     * @return Lista cuvintelor gasite.
+     * @return 1, daca exista cel putin un cuvant; 0, altfel
      */
-    public List<Word> findByStartPattern(String pattern)
+    public Integer findByStartPattern(String pattern)
     {
         EntityManager entityManager = EntityFactoryManager.getInstance().createEntityManager();
 
-        String query = "SELECT w FROM Word w WHERE w.text LIKE ?1";
-        TypedQuery<Word> typedQuery = entityManager.createQuery(query, Word.class);
+        String query = "SELECT 1 FROM Word w WHERE w.text LIKE ?1";
+        TypedQuery<Integer> typedQuery = entityManager.createQuery(query, Integer.class);
         typedQuery.setParameter(1,  pattern + "%");
 
-        List<Word> listOfWords = null;
+        Integer result = 0;
         try
         {
-            listOfWords = typedQuery.getResultList();
+            result = typedQuery.getSingleResult();
         }
         catch(Exception ignored)
         { }
 
         // Caut si fara diacritici
-        if(listOfWords == null)
+        if(result == 0)
         {
             typedQuery.setParameter(1,  WordController.stringWithoutDiacritics(pattern) + "%");
             try
             {
-                listOfWords = typedQuery.getResultList();
+                result = typedQuery.getSingleResult();
             }
             catch(Exception ignored)
             { }
         }
 
         entityManager.close();
-        return listOfWords;
+        return result;
     }
 
     @Override
