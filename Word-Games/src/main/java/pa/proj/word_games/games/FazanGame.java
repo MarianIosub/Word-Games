@@ -1,27 +1,34 @@
 package pa.proj.word_games.games;
 
+import com.sun.security.ntlm.Client;
 import pa.proj.word_games.controllers.WordController;
 import pa.proj.word_games.managers.EntityFactoryManager;
+import pa.proj.word_games.server.components.GameLobby;
+import pa.proj.word_games.server.threads.ClientThread;
 
 import java.io.IOException;
 import java.util.*;
 
-public class FazanGame
-{
+public class FazanGame implements AbstractGame {
     /**
      * Retine player-ul a carui tura este in acest moment.
      */
     private int playerTurnIndex;
 
     /**
-     * Retine lista jucatorilor.
-     */
-    private List<Player> listOfPlayers;
-
-    /**
      * Retine scorul unui jucator.
      */
     private Map<Player, Integer> playerScores;
+
+    /**
+     * Thread-urile care comunica cu clientii din joc (Lista jucatorilor).
+     */
+    private List<ClientThread> clientThreads;
+
+    /**
+     * Retine lobby-ul in care se joaca jocul.
+     */
+    private GameLobby gameLobby;
 
     /**
      * Verifica daca un cuvant este valid (daca apare in baza de date).
@@ -77,7 +84,7 @@ public class FazanGame
      */
     private void nextPlayerTurn()
     {
-        playerTurnIndex = (playerTurnIndex + 1) % listOfPlayers.size();
+        playerTurnIndex = (playerTurnIndex + 1) % clientThreads.size();
     }
 
     /**
@@ -96,10 +103,10 @@ public class FazanGame
      * @throws IOException
      * @return Index-ul jucatorului care a pierdut.
      */
-    private int gameSession(int roundNumber, int startingPlayerIndex) throws IOException
+    private synchronized int gameSession(int roundNumber, int startingPlayerIndex) throws IOException
     {
         // Initializarea variabilelor
-        System.out.println("Fazan Game - Runda " + roundNumber);
+        sendMessageToAllClients("Fazan Game - Runda " + roundNumber);
 
         playerTurnIndex = startingPlayerIndex;
         int turnNumber = 0;
@@ -108,53 +115,53 @@ public class FazanGame
         String previousWord = String.valueOf(generateRandomAlphabetCharacter());
         String actualWord;
 
-        Scanner scanner = new Scanner(System.in);
-
         // Jocul
         do {
             turnNumber++;
 
-            System.out.println("\nTura jucatorului " + listOfPlayers.get(playerTurnIndex).getName());
+            sendMessageToAllClients("Tura jucatorului " + clientThreads.get(playerTurnIndex).getUser().getName());
             if(previousWord.length() == 1)
-                System.out.println("Caracterul cu care trebuie sa inceapa cuvantul: " + previousWord);
+                actualWord = sendMessageToAllClientsAndWaitResponseFromCertainClient(
+                        "Caracterul cu care trebuie sa inceapa litera: " + previousWord,
+                        clientThreads.get(playerTurnIndex)
+                );
             else
-                System.out.println("Caracterele cu care trebuie sa inceapa cuvantul: " + previousWord.substring(previousWord.length() - 2));
-            System.out.print(" >> ");
-            actualWord = scanner.next();
+                actualWord = sendMessageToAllClientsAndWaitResponseFromCertainClient(
+                        "Caracterele cu care trebuie sa inceapa literele: " + previousWord.substring(previousWord.length() - 2),
+                        clientThreads.get(playerTurnIndex)
+                );
+
+            sendMessageToAllClientsExceptCertainOne("Jucatorul " + clientThreads.get(playerTurnIndex).getUser().getName() +
+                    "a introdus cuvantul \"" + actualWord + "\".", clientThreads.get(playerTurnIndex));
 
             while(true)
             {
                 // Verific daca cuvantul este valid
                 if(actualWord.length() < 3 || !isValidWord(actualWord))
                 {
-                    System.out.println("Cuvantul nu este valid!");
-                    System.out.print(" >> ");
-                    actualWord = scanner.next();
+                    actualWord = sendMessageToAllClientsAndWaitResponseFromCertainClient("Cuvantul nu este valid!", clientThreads.get(playerTurnIndex));
                 }
                 // Verific daca cuvantul respecta regula fazanului
                 else if(!verifyFazanRule(previousWord, actualWord))
                 {
-                    System.out.println("Cuvantul nu respecta regula fazanului!");
-                    System.out.print(" >> ");
-                    actualWord = scanner.next();
+                    actualWord = sendMessageToAllClientsAndWaitResponseFromCertainClient("Cuvantul nu respecta regula fazanului!", clientThreads.get(playerTurnIndex));
                 }
                 // Verific daca a mai fost folosit cuvantul in aceasta runda
                 else if(usedWords.contains(actualWord.toLowerCase(Locale.ROOT)))
                 {
-                    System.out.println("Cuvantul a mai fost folosit!");
-                    System.out.print(" >> ");
-                    actualWord = scanner.next();
+                    actualWord = sendMessageToAllClientsAndWaitResponseFromCertainClient("Cuvantul a mai fost folosit!", clientThreads.get(playerTurnIndex));
                 }
                 // Verific daca este cuvant care inchide si daca are voie sa inchida
-                else if((verifyEndOfFazanGame(actualWord)) && (turnNumber <= listOfPlayers.size()))
+                else if((verifyEndOfFazanGame(actualWord)) && (turnNumber <= clientThreads.size()))
                 {
-                    System.out.println("Nu ai voie sa inchizi jocul atat de devreme!");
-                    System.out.print(" >> ");
-                    actualWord = scanner.next();
+                    actualWord = sendMessageToAllClientsAndWaitResponseFromCertainClient("Nu ai voie sa inchizi jocul atat de devreme!", clientThreads.get(playerTurnIndex));
                 }
                 // Cuvant bun
                 else
                     break;
+
+                sendMessageToAllClientsExceptCertainOne("Jucatorul " + clientThreads.get(playerTurnIndex).getUser().getName() +
+                        "a introdus cuvantul \"" + actualWord + "\".", clientThreads.get(playerTurnIndex));
             }
 
             usedWords.add(actualWord.toLowerCase(Locale.ROOT));
@@ -164,9 +171,9 @@ public class FazanGame
         } while(!verifyEndOfFazanGame(actualWord));
 
         // Afisarea pierzatorului si updatarea scorului acestuia
-        System.out.println("In runda " + roundNumber + " a pierdut jucatorul " + listOfPlayers.get(playerTurnIndex).getName() + ".");
-        playerScores.replace(listOfPlayers.get(playerTurnIndex),
-                playerScores.get(listOfPlayers.get(playerTurnIndex)) - 1);
+        sendMessageToAllClients("In runda " + roundNumber + " a pierdut jucatorul " + clientThreads.get(playerTurnIndex).getUser().getName() + ".");
+        playerScores.replace(clientThreads.get(playerTurnIndex).getUser(),
+                playerScores.get(clientThreads.get(playerTurnIndex).getUser()) - 1);
         return playerTurnIndex;
     }
 
@@ -176,9 +183,9 @@ public class FazanGame
      */
     private boolean existsPlayerWhoLost()
     {
-        for(Player player : listOfPlayers)
+        for(ClientThread clientThread : clientThreads)
         {
-            if(playerScores.get(player) == 0)
+            if(playerScores.get(clientThread.getUser()) == 0)
                 return true;
         }
         return false;
@@ -187,103 +194,118 @@ public class FazanGame
     /**
      * Afiseaza pe ercan scorul fiecarui jucator.
      */
-    private void printPlayerScores()
-    {
-        System.out.println("Scorul fiecarui jucator: ");
-        for(Player player : listOfPlayers)
+    private void printPlayerScores() throws IOException {
+        sendMessageToAllClients("Scorul fiecarui jucator: \n");
+        for(ClientThread clientThread : clientThreads)
         {
-            System.out.print("\t" + player.getName() + " - ");
+            Player player = clientThread.getUser();
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append("\t").append(player.getName()).append(" - ");
             switch(playerScores.get(player))
             {
                 case 5:
                 {
-                    System.out.print("");
+                    stringBuilder.append("");
                     break;
                 }
                 case 4:
                 {
-                    System.out.print("F");
+                    stringBuilder.append("F");
                     break;
                 }
                 case 3:
                 {
-                    System.out.print("FA");
+                    stringBuilder.append("FA");
                     break;
                 }
                 case 2:
                 {
-                    System.out.print("FAZ");
+                    stringBuilder.append("FAZ");
                     break;
                 }
                 case 1:
                 {
-                    System.out.print("FAZA");
+                    stringBuilder.append("FAZA");
                     break;
                 }
                 case 0:
                 {
-                    System.out.print("FAZAN");
+                    stringBuilder.append("FAZAN");
                     break;
                 }
             }
-            System.out.print("\n");
+            sendMessageToAllClients(stringBuilder.toString());
         }
     }
 
-    public FazanGame()
+    /**
+     * Trimite un mesaj catre toti clientii din lista clientThreads, fara a astepta vreun raspuns de la acestia.
+     * @param message Mesajul care va fi trimis.
+     */
+    private void sendMessageToAllClients(String message) throws IOException {
+        for(ClientThread clientThread : clientThreads) {
+            clientThread.sendMessageWithoutWaitingForResponse(message);
+        }
+    }
+
+    /**
+     * Trimite un mesaj catre toti clientii din lista clientThreads, asteptand raspunsul doar de la unul dintre acestia, specificat.
+     * @param message Mesajul care va fi trimis.
+     * @param client Clientul de la care se va astepta raspunsul
+     * @return Raspunsul dat
+     */
+    private String sendMessageToAllClientsAndWaitResponseFromCertainClient(String message, ClientThread client) throws IOException {
+        for(ClientThread clientThread : clientThreads) {
+            if(clientThread != client)
+                //clientThread.sendMessageWithoutWaitingForResponse("dummy");
+                clientThread.sendMessageWithoutWaitingForResponse(message);
+        }
+        return client.sendMessageAndWaitForResponse(message);
+    }
+
+    /**
+     * <p>Trimite un mesaj catre toti clientii din lista clientThreads, cu exceptia unuia specific, fara a astepta
+     * vreun raspuns de la acestia.</p>
+     * @param message Mesajul care va fi trimis.
+     * @param exceptedClient Clientul caruia nu ii va fi trimis un mesaj.
+     */
+    private void sendMessageToAllClientsExceptCertainOne(String message, ClientThread exceptedClient) throws IOException {
+        for(ClientThread clientThread : clientThreads) {
+            if(clientThread != exceptedClient)
+                clientThread.sendMessageWithoutWaitingForResponse(message);
+        }
+    }
+
+    public FazanGame(GameLobby gameLobby)
     {
-        EntityFactoryManager.getInstance();
-        listOfPlayers = new ArrayList<>();
+        this.gameLobby = gameLobby;
+    }
+
+    /**
+     * Initializeaza campurile.
+     * @param clientThreads Lista thread-urilor clientilor.
+     */
+    public synchronized void initialize(List<ClientThread> clientThreads)
+    {
+        this.clientThreads = clientThreads;
         playerScores = new HashMap<>();
-    }
-
-    /**
-     * Adauga un player in lista de playeri.
-     * @param player Player-ul care va fi adaugat.
-     * @return true, daca acesta a fost adaugat; false, atlfel
-     */
-    public boolean addPlayer(Player player)
-    {
-        if(listOfPlayers.contains(player))
-            return false;
-
-        listOfPlayers.add(player);
-        playerScores.put(player, 0);
-        return true;
-    }
-
-    /**
-     * Sterge un player din lista de playeri.
-     * @param player Player-ul care va fi sters.
-     * @return true, daca acesta a fost sters; false, atlfel
-     */
-    public boolean removePlayer(Player player)
-    {
-        if(listOfPlayers.contains(player))
-        {
-            listOfPlayers.remove(player);
-            playerScores.remove(player);
-            return true;
-        }
-
-        return false;
     }
 
     /**
      * Incepe jocul.
      */
-    public void startGame() throws IOException
+    public synchronized void startGame() throws IOException
     {
-        if(listOfPlayers.size() < 2)
+        if(clientThreads.size() < 2)
         {
-            System.out.println("Jocul de Fazan nu poate incepe deoarece nu sunt destui jucatori.");
+            sendMessageToAllClients("Jocul de Fazan nu poate incepe deoarece nu sunt destui jucatori.");
             return;
         }
 
         // Initializez scorurile
-        for(Player player : listOfPlayers)
+        for(ClientThread clientThread : clientThreads)
         {
-            playerScores.replace(player, 5);
+            playerScores.put(clientThread.getUser(), 5);
         }
 
         // Jucarea rundelor
@@ -300,11 +322,6 @@ public class FazanGame
         }
 
         // Afisarea player-ului pierzator
-        System.out.println(listOfPlayers.get(startingPlayerIndex).getName() + " a pierdut jocul de Fazan!");
+        sendMessageToAllClients(clientThreads.get(startingPlayerIndex).getUser().getName() + " a pierdut jocul de Fazan!");
     }
-
-    /* TODO: play cu alti jucatori (in retea) - setSoTimeout pentru timeout la introducerea cuvantului */
-
-    /* TODO: play vs un computer (cand este un singur player)
-    *       basically player-ul incepe, computerul interogheaza baza de date pentru cuvinte bune si ia unul random*/
 }
