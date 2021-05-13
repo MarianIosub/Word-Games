@@ -161,7 +161,7 @@ public class HangMan implements AbstractGame {
         }else{
             wordGuessed.setText(newWord);
         }
-        if(wordGuessed.getText().equals(wordToGuess.getText())){][\]
+        if(wordGuessed.getText().equals(wordToGuess.getText())){
             clientThread.sendMessageWithoutWaitingForResponse("Corect! Ai castigat! Cuvantul era: ");
             clientThread.sendMessageWithoutWaitingForResponse(">>> "+wordToGuess.getText()+" <<<" );
             lifes=0;
