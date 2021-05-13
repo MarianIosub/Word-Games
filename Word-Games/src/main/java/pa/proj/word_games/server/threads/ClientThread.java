@@ -92,27 +92,31 @@ public class ClientThread extends Thread {
                         sendMessageWithoutWaitingForResponse("Raspuns invalid!");
                     }
 
-                    String maxNumberOfPlayers = "2";
-                    while(true) {
-                        maxNumberOfPlayers = sendMessageAndWaitForResponse("Cati jucatori pot fi in acest lobby?");
-
-                        try {
-                            int temp = Integer.parseInt(maxNumberOfPlayers);
-
-                            if(temp < 2)
-                                sendMessageWithoutWaitingForResponse("Numarul minim de jucatori este 2!");
-                            else
-                                break;
-                        }
-                        catch(Exception exception) {
-                            sendMessageWithoutWaitingForResponse("Raspuns invalid!");
-                        }
-                    }
-
                     // TODO: Hangman + alte jocuri
                     if(gameName.equals("1")) {
+                        String maxNumberOfPlayers = "2";
+                        while(true) {
+                            maxNumberOfPlayers = sendMessageAndWaitForResponse("Cati jucatori pot fi in acest lobby?");
+
+                            try {
+                                int temp = Integer.parseInt(maxNumberOfPlayers);
+
+                                if(temp < 2)
+                                    sendMessageWithoutWaitingForResponse("Numarul minim de jucatori este 2!");
+                                else
+                                    break;
+                            }
+                            catch(Exception exception) {
+                                sendMessageWithoutWaitingForResponse("Raspuns invalid!");
+                            }
+                        }
+
                         gameLobby = new GameLobby(this, "fazan", Integer.parseInt(maxNumberOfPlayers));
                     }
+                    else if(gameName.equals("2")) {
+                        gameLobby = new GameLobby(this, "hangman", 1);
+                    }
+
                     sendMessageWithoutWaitingForResponse("Codul de conectare este: " + gameLobby.getJoinCode());
                 }
                 else if (response.equals("3")) { // Start Game
@@ -172,6 +176,7 @@ public class ClientThread extends Thread {
     }
 
     // TODO: ca sa poata crea un lobby/sa se joace, trb sa fie logati => numele din joc va fi username-ul
+    // TODO: de inlocuit Player cu noul User
 
     // TODO: un jucator poate fi intr-un singur lobby (nu in mai multe in acelasi timp)
 

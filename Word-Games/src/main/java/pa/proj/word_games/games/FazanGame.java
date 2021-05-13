@@ -30,6 +30,8 @@ public class FazanGame implements AbstractGame {
      */
     private GameLobby gameLobby;
 
+    // TODO: use Word() instead of String
+
     /**
      * Verifica daca un cuvant este valid (daca apare in baza de date).
      * @param word Cuvantul verificat.

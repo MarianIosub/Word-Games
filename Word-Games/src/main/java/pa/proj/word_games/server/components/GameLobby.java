@@ -3,6 +3,7 @@ package pa.proj.word_games.server.components;
 import com.sun.security.ntlm.Client;
 import pa.proj.word_games.games.AbstractGame;
 import pa.proj.word_games.games.FazanGame;
+import pa.proj.word_games.games.HangMan;
 import pa.proj.word_games.server.threads.ClientThread;
 
 import java.io.IOException;
@@ -80,9 +81,12 @@ public class GameLobby {
         generateJoinCode();
         GameLobby.gameLobbies.add(this);
         switch(gameName.toLowerCase(Locale.ROOT)) {
-            case "fazan":
-            {
+            case "fazan": {
                 GameLobby.mapOfGames.put(this, new FazanGame(this));
+                break;
+            }
+            case "hangman": {
+                GameLobby.mapOfGames.put(this, new HangMan(owner));
                 break;
             }
             // TODO: Hangman + alte jocuri
@@ -149,4 +153,6 @@ public class GameLobby {
 
         return null;
     }
+
+    // TODO: dupa ce se termina jocul intr-un lobby, lobby-ul devine inactiv, iar lista de clientThread-uri se goleste
 }
