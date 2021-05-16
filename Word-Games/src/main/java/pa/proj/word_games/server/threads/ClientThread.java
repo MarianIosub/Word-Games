@@ -84,7 +84,8 @@ public class ClientThread extends Thread {
                     while(true) {
                         sendMessageWithoutWaitingForResponse("Ce se va juca in acest lobby?");
                         sendMessageWithoutWaitingForResponse("\t1 - Fazan");
-                        gameName = sendMessageAndWaitForResponse("\t2 - HangMan");
+                        sendMessageWithoutWaitingForResponse("\t2 - Type Fast");
+                        gameName = sendMessageAndWaitForResponse("\t3 - HangMan");
 
                         if(gameName.equals("1") || gameName.equals("2"))
                             break;
@@ -113,8 +114,10 @@ public class ClientThread extends Thread {
 
                         gameLobby = new GameLobby(this, "fazan", Integer.parseInt(maxNumberOfPlayers));
                     }
-                    else if(gameName.equals("2")) {
+                    else if(gameName.equals("3")) {
                         gameLobby = new GameLobby(this, "hangman", 1);
+                    } else if(gameName.equals("2")) {
+                        gameLobby = new GameLobby(this, "typeFast", 1);
                     }
 
                     sendMessageWithoutWaitingForResponse("Codul de conectare este: " + gameLobby.getJoinCode());

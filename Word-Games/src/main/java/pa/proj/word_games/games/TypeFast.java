@@ -24,11 +24,11 @@ public class TypeFast implements AbstractGame {
     public TypeFast() {
     }
 
-    private void Welcome() {
-        System.out.println("Salut si bine ai venit la \"Fast typing words!\"!");
-        System.out.println("Scopul acestui joc este de a vedea cat de rapid poti sa scrii!");
-        System.out.println("Astfel incat incearca sa scrii cat mai multe cuvinte corecte");
-        System.out.println("                IN UN SINGUR MINUT                ");
+    private void Welcome() throws IOException {
+        clientThread.sendMessageWithoutWaitingForResponse("Salut si bine ai venit la \"Fast typing words!\"!");
+        clientThread.sendMessageWithoutWaitingForResponse("Scopul acestui joc este de a vedea cat de rapid poti sa scrii!");
+        clientThread.sendMessageWithoutWaitingForResponse("Astfel incat incearca sa scrii cat mai multe cuvinte corecte");
+        clientThread.sendMessageWithoutWaitingForResponse("                IN UN SINGUR MINUT                ");
     }
 
     private long timeRemaining() {
@@ -40,7 +40,6 @@ public class TypeFast implements AbstractGame {
     private void extractWords() throws IOException {
 
         for (int index = 0; index < 20; index++) {
-            System.out.println(words.size());
             Word word = new Word();
             Random random = new Random();
             if (random.nextInt() % 2 == 0) {
@@ -53,14 +52,14 @@ public class TypeFast implements AbstractGame {
     }
 
     private void checkWord() throws IOException {
-        System.out.println("Cuvintele care trebuie scrise sunt: ");
+        clientThread.sendMessageWithoutWaitingForResponse("Cuvintele care trebuie scrise sunt: ");
         for (Word word : words) {
-            System.out.print(word.getText() + ", ");
+            clientThread.sendMessageWithoutWaitingForResponse(word.getText() + ", ");
         }
-        Scanner scanner = new Scanner(System.in);
+
         Word wordRead = new Word();
-        System.out.print("\n Introdu cuvantul rapid  >>");
-        wordRead.setText(scanner.nextLine());
+
+        wordRead.setText(clientThread.sendMessageAndWaitForResponse("Introdu cuvantul rapid "));
         if (wordRead.getText().equals(words.get(0).getText())) {
             correctWords++;
         } else {
@@ -69,20 +68,19 @@ public class TypeFast implements AbstractGame {
         words.remove(0);
     }
 
-    public void end() {
-        System.out.println("In un minut ai reusit sa scrii: ");
-        System.out.println("  >>cuvinte corecte:  " + correctWords);
-        System.out.println("  >>cuvinte gresite:  " + badWords);
-        System.out.println("Felicitari!");
+    public void end() throws IOException {
+        clientThread.sendMessageWithoutWaitingForResponse("In un minut ai reusit sa scrii: ");
+        clientThread.sendMessageWithoutWaitingForResponse("  >>cuvinte corecte:  " + correctWords);
+        clientThread.sendMessageWithoutWaitingForResponse("  >>cuvinte gresite:  " + badWords);
+        clientThread.sendMessageWithoutWaitingForResponse("Felicitari!");
     }
 
     public void typeFastGame() throws IOException {
-        Welcome();
         extractWords();
+        Welcome();
         setStartTime(System.currentTimeMillis());
-
         while (timeRemaining() <= 60 && words.size() != 0) {
-            System.out.println("\n\nS-au scurs: " + timeRemaining() + " secunde.");
+            clientThread.sendMessageWithoutWaitingForResponse("S-au scurs: " + timeRemaining() + " secunde.");
             checkWord();
         }
         end();
@@ -91,6 +89,7 @@ public class TypeFast implements AbstractGame {
     @Override
     public void startGame() throws IOException {
 
+        typeFastGame();
     }
 
     public long getStartTime() {
@@ -106,8 +105,4 @@ public class TypeFast implements AbstractGame {
 
     }
 
-    public static void main(String[] args) throws IOException {
-        TypeFast typeFast = new TypeFast();
-        typeFast.typeFastGame();
-    }
 }

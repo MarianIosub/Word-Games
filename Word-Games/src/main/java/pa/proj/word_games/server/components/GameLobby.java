@@ -4,6 +4,7 @@ import com.sun.security.ntlm.Client;
 import pa.proj.word_games.games.AbstractGame;
 import pa.proj.word_games.games.FazanGame;
 import pa.proj.word_games.games.HangMan;
+import pa.proj.word_games.games.TypeFast;
 import pa.proj.word_games.server.threads.ClientThread;
 
 import java.io.IOException;
@@ -89,7 +90,10 @@ public class GameLobby {
                 GameLobby.mapOfGames.put(this, new HangMan(owner));
                 break;
             }
-            // TODO: Hangman + alte jocuri
+            case "typefast":{
+                GameLobby.mapOfGames.put(this, new TypeFast(owner));
+                break;
+            }
         }
     }
 

@@ -16,7 +16,9 @@ public class Word
     @Column(name="text")
     private String text;
 
-    public Word() { }
+    public Word() {
+        text="";
+    }
 
     public Word(int id, String text) {
         this.id = id;

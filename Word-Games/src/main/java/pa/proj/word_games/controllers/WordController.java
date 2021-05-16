@@ -66,9 +66,14 @@ public class WordController {
      */
     public static Word extractEasyWord() throws IOException {
         Word extractedWord = extractWord();
-
+        if (extractedWord==null||extractedWord.getText()==null){
+            return WordController.extractEasyWord();
+        }
         while (extractedWord.getText().length() < 3 || extractedWord.getText().length() > 6) {
             extractedWord = extractWord();
+            if (extractedWord==null||extractedWord.getText()==null){
+                return WordController.extractEasyWord();
+            }
         }
 
         return extractedWord;
@@ -82,9 +87,14 @@ public class WordController {
      */
     public static Word extractMediumWord() throws IOException {
         Word extractedWord = extractWord();
-
+        if (extractedWord==null||extractedWord.getText()==null){
+            return WordController.extractEasyWord();
+        }
         while (extractedWord.getText().length() < 6 || extractedWord.getText().length() > 9) {
             extractedWord = extractWord();
+            if (extractedWord==null||extractedWord.getText()==null){
+                return WordController.extractEasyWord();
+            }
         }
 
         return extractedWord;
@@ -98,9 +108,14 @@ public class WordController {
      */
     public static Word extractHardWord() throws IOException {
         Word extractedWord = extractWord();
-
+        if (extractedWord==null||extractedWord.getText()==null){
+            return WordController.extractEasyWord();
+        }
         while (extractedWord.getText().length() < 9) {
             extractedWord = extractWord();
+            if (extractedWord==null||extractedWord.getText()==null){
+                return WordController.extractEasyWord();
+            }
         }
 
         return extractedWord;
