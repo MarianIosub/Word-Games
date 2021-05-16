@@ -10,11 +10,11 @@ import java.util.List;
 import java.util.Scanner;
 
 public class HangMan implements AbstractGame {
-    private static Word wordToGuess = new Word();
-    private static Word wordGuessed = new Word();
-    private static Integer lifes;
-    static Scanner scanner = null;
-    private static Player player;
+    private  Word wordToGuess = new Word();
+    private  Word wordGuessed = new Word();
+    private  Integer lifes;
+    ;
+    private  Player player;
     private static ClientThread clientThread;
 
     public HangMan(ClientThread clientThread) {
@@ -25,7 +25,7 @@ public class HangMan implements AbstractGame {
         this.player = player;
     }
 
-    public static void gameLevel() throws IOException {
+    public  void gameLevel() throws IOException {
         String level = clientThread.sendMessageAndWaitForResponse("Alege nivelul de joc pe care il doresti: Usor, Mediu, Greu!");
         switch (level) {
             case "usor": {
@@ -47,7 +47,7 @@ public class HangMan implements AbstractGame {
         }
     }
 
-    public static void welcome() throws IOException {
+    public  void welcome() throws IOException {
         clientThread.sendMessageWithoutWaitingForResponse("Salut " + player.getName() + " si bine ai venit la jocul Spânzurătoarea!");
         clientThread.sendMessageWithoutWaitingForResponse("Regulile sunt dupa cum urmeaza:");
         clientThread.sendMessageWithoutWaitingForResponse("\t- incearca sa ghicesti pe rand fiecare litera pana cuvantul se umple;");
@@ -56,7 +56,7 @@ public class HangMan implements AbstractGame {
         clientThread.sendMessageWithoutWaitingForResponse("MULT SUCCES!");
     }
 
-    public static void initGuess() throws IOException {
+    public  void initGuess() throws IOException {
         wordGuessed.setText("");
         for (int index = 0; index < wordToGuess.getText().length(); index++) {
             wordGuessed.setText(wordGuessed.getText() + "*");
@@ -65,7 +65,7 @@ public class HangMan implements AbstractGame {
         clientThread.sendMessageWithoutWaitingForResponse(wordGuessed.getText());
     }
 
-    public static void hangImage() throws IOException {
+    public  void hangImage() throws IOException {
         if (lifes == 6) {
             clientThread.sendMessageWithoutWaitingForResponse("Nu ai nimerit, reincearca!");
             clientThread.sendMessageWithoutWaitingForResponse(" ");
@@ -149,7 +149,7 @@ public class HangMan implements AbstractGame {
         }
     }
 
-    public static void checkLetter(String guess) throws IOException {
+    public  void checkLetter(String guess) throws IOException {
 
         String newWord = "";
         for (int index = 0; index < wordToGuess.getText().length(); index++) {
