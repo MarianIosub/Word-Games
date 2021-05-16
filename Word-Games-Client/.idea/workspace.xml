@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="1e2015fb-b56c-4b1c-9b88-868a3309d2c5" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Word-Games/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Word-Games/src/main/java/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Word-Games/src/main/java/pa/proj/word_games/controllers/WordController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Word-Games/src/main/java/pa/proj/word_games/controllers/WordController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Word-Games/src/main/java/pa/proj/word_games/games/TypeFast.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Word-Games/src/main/java/pa/proj/word_games/games/TypeFast.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Word-Games/src/main/java/pa/proj/word_games/models/Word.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Word-Games/src/main/java/pa/proj/word_games/models/Word.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Word-Games/src/main/java/pa/proj/word_games/server/components/GameLobby.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Word-Games/src/main/java/pa/proj/word_games/server/components/GameLobby.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Word-Games/src/main/java/pa/proj/word_games/server/threads/ClientThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Word-Games/src/main/java/pa/proj/word_games/server/threads/ClientThread.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Word-Games/target/classes/pa/proj/word_games/controllers/WordController.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Word-Games/target/classes/pa/proj/word_games/controllers/WordController.class" afterDir="false" />
-    </list>
+    <list default="true" id="1e2015fb-b56c-4b1c-9b88-868a3309d2c5" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -72,7 +63,7 @@
       <workItem from="1620975341288" duration="1844000" />
       <workItem from="1621061542972" duration="1230000" />
       <workItem from="1621152153700" duration="618000" />
-      <workItem from="1621160614730" duration="913000" />
+      <workItem from="1621160614730" duration="1255000" />
     </task>
     <servers />
   </component>
