@@ -1,6 +1,5 @@
 package pa.proj.word_games.server.components;
 
-import com.sun.security.ntlm.Client;
 import pa.proj.word_games.games.AbstractGame;
 import pa.proj.word_games.games.FazanGame;
 import pa.proj.word_games.games.HangMan;
@@ -8,7 +7,6 @@ import pa.proj.word_games.games.TypeFast;
 import pa.proj.word_games.server.threads.ClientThread;
 
 import java.io.IOException;
-import java.sql.Time;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -101,6 +99,10 @@ public class GameLobby {
         return joinCode;
     }
 
+    public ClientThread getOwner() {
+        return owner;
+    }
+
     /**
      * Adauga un nou client in lobby.
      *
@@ -133,6 +135,8 @@ public class GameLobby {
 
         GameLobby.mapOfGames.get(this).initialize(clients);
         GameLobby.mapOfGames.get(this).startGame();
+
+        destroyLobby();
     }
 
     /**
@@ -161,5 +165,21 @@ public class GameLobby {
         return null;
     }
 
-    // TODO: dupa ce se termina jocul intr-un lobby, lobby-ul devine inactiv, iar lista de clientThread-uri se goleste
+    /**
+     * "Distruge" un lobby: curata memoria si il sterge din lista de lobby-uri.
+     * De asemenea, "da afara" toti clientii conectati la acest lobby.
+     */
+    public void destroyLobby() throws IOException {
+        gameLobbies.remove(this);
+        mapOfGames.remove(this);
+
+        for(ClientThread clientThread : clients) {
+            if(clientThread != null)
+                clientThread.setGameLobby(null);
+        }
+
+        joinCode = null;
+        clients = null;
+        owner = null;
+    }
 }

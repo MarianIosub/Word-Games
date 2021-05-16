@@ -20,8 +20,7 @@ public class TypeFast implements AbstractGame {
         this.clientThread = clientThread;
     }
 
-    public TypeFast() {
-    }
+    public TypeFast() { }
 
     private void Welcome() throws IOException {
         clientThread.sendMessageWithoutWaitingForResponse("Salut si bine ai venit la \"Fast typing words!\"!");
@@ -87,7 +86,6 @@ public class TypeFast implements AbstractGame {
 
     @Override
     public void startGame() throws IOException {
-
         typeFastGame();
     }
 
@@ -100,8 +98,6 @@ public class TypeFast implements AbstractGame {
     }
 
     @Override
-    public void initialize(List<ClientThread> clientThreads) {
-
-    }
+    public void initialize(List<ClientThread> clientThreads) { }
 
 }

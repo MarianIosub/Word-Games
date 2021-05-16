@@ -17,6 +17,11 @@ public class ClientThread extends Thread {
     private PrintWriter out;
 
     /**
+     * Lobby-ul la care este conectat clientul.
+     */
+    private GameLobby gameLobby;
+
+    /**
      * Contul in care este logat clientul
      */
     private Player user; // TODO: logare + register
@@ -30,10 +35,18 @@ public class ClientThread extends Thread {
         out = new PrintWriter(
                 socket.getOutputStream()
         );
+        gameLobby = null;
     }
 
     public Player getUser() {
         return user;
+    }
+
+    public void setGameLobby(GameLobby gameLobby) throws IOException {
+        this.gameLobby = gameLobby;
+
+        if(gameLobby == null)
+            sendMessageWithoutWaitingForResponse("Lobby-ul a fost inchis!");
     }
 
     /**
@@ -42,7 +55,7 @@ public class ClientThread extends Thread {
      */
     public void run() {
         try {
-            GameLobby gameLobby = null;
+            GameLobby gameLobbyObj = null;
             String response;
             String joinCode;
 
@@ -50,16 +63,17 @@ public class ClientThread extends Thread {
                 sendMessageWithoutWaitingForResponse("Alegeti o actiune:");
                 sendMessageWithoutWaitingForResponse("\t1 - Join Lobby");
                 sendMessageWithoutWaitingForResponse("\t2 - Create Lobby");
-                response = sendMessageAndWaitForResponse("\t3 - Start Game");
+                sendMessageWithoutWaitingForResponse("\t3 - Start Game");
+                response = sendMessageAndWaitForResponse("\t4 - Inchide lobby-ul (daca esti creatorul acestuia)");
 
                 if (response.equals("1")) { // Join Lobby
                     joinCode = sendMessageAndWaitForResponse("Introduceti codul lobby-ului:");
-                    gameLobby = GameLobby.getGameLobbyByJoinCode(joinCode);
+                    gameLobbyObj = GameLobby.getGameLobbyByJoinCode(joinCode);
 
-                    if(gameLobby == null)
+                    if(gameLobbyObj == null)
                         sendMessageWithoutWaitingForResponse("Nu exista un lobby cu acest cod.");
                     else {
-                        int answerCode = gameLobby.addNewClient(this);
+                        int answerCode = gameLobbyObj.addNewClient(this);
                         switch(answerCode) {
                             case -1: {
                                 sendMessageWithoutWaitingForResponse("Nu mai este loc in acest lobby.");
@@ -67,6 +81,10 @@ public class ClientThread extends Thread {
                             }
                             case 1: {
                                 sendMessageWithoutWaitingForResponse("Ai intrat in lobby.");
+
+                                if(this.gameLobby != null)
+                                    gameLobby.destroyLobby();
+                                this.gameLobby = gameLobbyObj;
                                 break;
                             }
                             case 0: {
@@ -93,7 +111,6 @@ public class ClientThread extends Thread {
                         sendMessageWithoutWaitingForResponse("Raspuns invalid!");
                     }
 
-                    // TODO: Hangman + alte jocuri
                     if(gameName.equals("1")) {
                         String maxNumberOfPlayers = "2";
                         while(true) {
@@ -112,23 +129,41 @@ public class ClientThread extends Thread {
                             }
                         }
 
-                        gameLobby = new GameLobby(this, "fazan", Integer.parseInt(maxNumberOfPlayers));
+                        gameLobbyObj = new GameLobby(this, "fazan", Integer.parseInt(maxNumberOfPlayers));
+                    }
+                    else if(gameName.equals("2")) {
+                        gameLobbyObj = new GameLobby(this, "typeFast", 1);
                     }
                     else if(gameName.equals("3")) {
-                        gameLobby = new GameLobby(this, "hangman", 1);
-                    } else if(gameName.equals("2")) {
-                        gameLobby = new GameLobby(this, "typeFast", 1);
+                        gameLobbyObj = new GameLobby(this, "hangman", 1);
                     }
 
-                    sendMessageWithoutWaitingForResponse("Codul de conectare este: " + gameLobby.getJoinCode());
+                    sendMessageWithoutWaitingForResponse("Codul de conectare este: " + gameLobbyObj.getJoinCode());
+
+                    if(this.gameLobby != null)
+                        this.gameLobby.destroyLobby();
+                    this.gameLobby = gameLobbyObj;
                 }
                 else if (response.equals("3")) { // Start Game
-                    if(gameLobby == null) {
+                    if(this.gameLobby == null) {
                         sendMessageWithoutWaitingForResponse("Nu esti in niciun lobby.");
                         continue;
                     }
 
-                    gameLobby.startGame(this);
+                    this.gameLobby.startGame(this);
+                }
+                else if(response.equals("4")) { // Inchide lobby-ul (daca esti creatorul acestuia)
+                    if(this.gameLobby == null) {
+                        sendMessageWithoutWaitingForResponse("Nu esti in niciun lobby.");
+                        continue;
+                    }
+
+                    if(this.gameLobby.getOwner() != this) {
+                        sendMessageWithoutWaitingForResponse("Nu esti creatorul lobby-ului in care esti conectat.");
+                        continue;
+                    }
+
+                    gameLobby.destroyLobby();
                 }
                 else sendMessageWithoutWaitingForResponse("Raspuns invalid!");
             }
@@ -181,7 +216,5 @@ public class ClientThread extends Thread {
     // TODO: ca sa poata crea un lobby/sa se joace, trb sa fie logati => numele din joc va fi username-ul
     // TODO: de inlocuit Player cu noul User
 
-    // TODO: un jucator poate fi intr-un singur lobby (nu in mai multe in acelasi timp)
-
-    // TODO: stergerea unui lobby cand owner-ul se duce in alt lobby sau il sterge explicit
+    // TODO: sa poti schimba lobby-ul dupa ce te-ai conectat la unul (nu ca si owner)
 }
