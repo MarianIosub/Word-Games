@@ -12,22 +12,20 @@ import java.util.Random;
 /**
  * Primeste request-uri si, in functie de acesta, apeleaza functii din repository-uri.
  */
-public class WordController
-{
+public class WordController {
     /**
      * Extrage un cuvant random din baza de date.
+     *
      * @return Cuvantul extras.
      * @throws IOException
      */
-    private static Word extractWord() throws IOException
-    {
+    private static Word extractWord() throws IOException {
         RepositoryManager repositoryManager = RepositoryManager.getInstance();
         Random random = new Random();
         int numberOfRepeats = random.nextInt(100);
         int generatedId = 0;
 
-        while(numberOfRepeats != 0)
-        {
+        while (numberOfRepeats != 0) {
             generatedId = random.nextInt(repositoryManager.getWordRepository().getNumberOfEntries().intValue());
             numberOfRepeats--;
         }
@@ -36,11 +34,11 @@ public class WordController
 
     /**
      * Elimina diacriticile din string-ul dat ca si parametru.
+     *
      * @param text Un string.
      * @return Parametrul string dat, dar fara diacritice.
      */
-    public static String stringWithoutDiacritics(String text)
-    {
+    public static String stringWithoutDiacritics(String text) {
         text = Normalizer.normalize(text, Normalizer.Form.NFD);
         text = text.replaceAll("\\p{M}", "");
         text = text.toLowerCase(Locale.ROOT);
@@ -50,69 +48,72 @@ public class WordController
 
     /**
      * Verifica daca un cuvant se afla in baza de date.
+     *
      * @param word Cuvantul care va fi verificat.
      * @return true, daca am gasit cuvantul in baza de date; false, atlfel
      * @throws IOException
      */
-    public static boolean verifyWordExistence(String word) throws IOException
-    {
+    public static boolean verifyWordExistence(String word) throws IOException {
         RepositoryManager repositoryManager = RepositoryManager.getInstance();
         return repositoryManager.getWordRepository().findByText(word) != null;
     }
 
     /**
      * Extrage un cuvant random, cu lungimea in intervalul [3,6], din baza de date.
+     *
      * @return Cuvantul extras.
      * @throws IOException
      */
-    public static Word extractEasyWord() throws IOException
-    {
+    public static Word extractEasyWord() throws IOException {
         Word extractedWord = extractWord();
 
-        while(extractedWord.getText().length() < 3 || extractedWord.getText().length() > 6)
+        while (extractedWord.getText().length() < 3 || extractedWord.getText().length() > 6) {
             extractedWord = extractWord();
+        }
 
         return extractedWord;
     }
 
     /**
      * Extrage un cuvant random, cu lungimea in intervalul [7,9], din baza de date.
+     *
      * @return Cuvantul extras.
      * @throws IOException
      */
-    public static Word extractMediumWord() throws IOException
-    {
+    public static Word extractMediumWord() throws IOException {
         Word extractedWord = extractWord();
 
-        while(extractedWord.getText().length() < 7 || extractedWord.getText().length() > 9)
+        while (extractedWord.getText().length() < 6 || extractedWord.getText().length() > 9) {
             extractedWord = extractWord();
+        }
 
         return extractedWord;
     }
 
     /**
      * Extrage un cuvant random, cu lungimea mai mare decat 9, din baza de date.
+     *
      * @return Cuvantul extras.
      * @throws IOException
      */
-    public static Word extractHardWord() throws IOException
-    {
+    public static Word extractHardWord() throws IOException {
         Word extractedWord = extractWord();
 
-        while(extractedWord.getText().length() < 9)
+        while (extractedWord.getText().length() < 9) {
             extractedWord = extractWord();
+        }
 
         return extractedWord;
     }
 
     /**
      * Verifica daca doua cuvinte sunt asemanatoare, chiar daca unul dintre ele sau ambele contin diacritici.
+     *
      * @param word1 Primul cuvant.
      * @param word2 Al doilea cuvant.
      * @return true, daca cuvintele date sunt asemanatoare; false, altfel
      */
-    public static boolean compareWords(String word1, String word2)
-    {
+    public static boolean compareWords(String word1, String word2) {
         word1 = stringWithoutDiacritics(word1);
         word2 = stringWithoutDiacritics(word2);
         return word1.equals(word2);
@@ -120,17 +121,17 @@ public class WordController
 
     /**
      * Verifica daca exista in baza de date cuvinte care incep cu un anumit pattern.
+     *
      * @param pattern Pattern-ul.
      * @return true, daca exista cel putin un cuvant; false, altfel
      */
-    public static boolean existsWordsWithStartPattern(String pattern)
-    {
+    public static boolean existsWordsWithStartPattern(String pattern) {
         RepositoryManager repositoryManager = RepositoryManager.getInstance();
         Integer result = repositoryManager.getWordRepository().findByStartPattern(pattern);
-        if(result == 1)
+        if (result == 1)
             return true;
 
-        if(pattern.equals(stringWithoutDiacritics(pattern)))
+        if (pattern.equals(stringWithoutDiacritics(pattern)))
             return false;
 
         // Caut fara sa tin cont de diacritici

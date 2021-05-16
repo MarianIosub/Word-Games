@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="1e2015fb-b56c-4b1c-9b88-868a3309d2c5" name="Default Changelist" comment="" />
+    <list default="true" id="1e2015fb-b56c-4b1c-9b88-868a3309d2c5" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/../Word-Games/src/main/java/pa/proj/word_games/games/TypeFast.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Word-Games/src/main/java/pa/proj/word_games/controllers/WordController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Word-Games/src/main/java/pa/proj/word_games/controllers/WordController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Word-Games/src/main/java/pa/proj/word_games/games/HangMan.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Word-Games/src/main/java/pa/proj/word_games/games/HangMan.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Word-Games/target/classes/pa/proj/word_games/games/HangMan.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Word-Games/target/classes/pa/proj/word_games/games/HangMan.class" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -34,6 +40,9 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../Word-Games" />
   </component>
   <component name="RunManager">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
@@ -57,8 +66,14 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1620464814450</updated>
+      <workItem from="1620975341288" duration="1844000" />
+      <workItem from="1621061542972" duration="1230000" />
+      <workItem from="1621152153700" duration="618000" />
     </task>
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -71,16 +86,5 @@
       </map>
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/Main.java</url>
-          <line>8</line>
-          <option name="timeStamp" value="4" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

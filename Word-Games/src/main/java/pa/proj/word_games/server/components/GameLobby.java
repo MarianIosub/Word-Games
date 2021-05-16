@@ -68,7 +68,7 @@ public class GameLobby {
         String characterSequence = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         Random random = new Random();
         joinCode = "";
-        for(int i=0; i<6; i++)
+        for (int i = 0; i < 6; i++)
             joinCode = joinCode + characterSequence.charAt(random.nextInt(characterSequence.length()));
     }
 
@@ -80,7 +80,7 @@ public class GameLobby {
         clients.add(owner);
         generateJoinCode();
         GameLobby.gameLobbies.add(this);
-        switch(gameName.toLowerCase(Locale.ROOT)) {
+        switch (gameName.toLowerCase(Locale.ROOT)) {
             case "fazan": {
                 GameLobby.mapOfGames.put(this, new FazanGame(this));
                 break;
@@ -99,16 +99,17 @@ public class GameLobby {
 
     /**
      * Adauga un nou client in lobby.
+     *
      * @param client Thread-ul clientului.
      * @return 1, daca a fost adaugat clientul; 0, daca clientul apartine deja lobby-ului; -1, daca nu mai este loc in lobby
      */
     public int addNewClient(ClientThread client) {
-        if(clients == null)
+        if (clients == null)
             return -1;
 
-        if(clients.contains(client))
+        if (clients.contains(client))
             return 0;
-        if(clients.size() == maxNumberOfPlayers)
+        if (clients.size() == maxNumberOfPlayers)
             return -1;
 
         clients.add(client);
@@ -122,7 +123,7 @@ public class GameLobby {
         gameStarted = true;
 
         numberOfConnectedPlayers++;
-        while(numberOfConnectedPlayers < clients.size()) {
+        while (numberOfConnectedPlayers < clients.size()) {
             TimeUnit.SECONDS.sleep(1);
         }
 
@@ -132,22 +133,24 @@ public class GameLobby {
 
     /**
      * Blocheaza procesul pana cand jocul a inceput.
+     *
      * @param clientThread Thread-ul clientului care a apelat functia.
      */
     public void waitUntilGameStarted(ClientThread clientThread) throws InterruptedException, IOException {
-        while(!gameStarted)
+        while (!gameStarted)
             TimeUnit.SECONDS.sleep(1);
         clientThread.sendMessageWithoutWaitingForResponse("A inceput jocul!");
     }
 
     /**
      * Cauta in lista de lobby-uri create dupa un anumit cod de conectare.
+     *
      * @param joinCode Codul de conectare.
      * @return Lobby-ul gasit; null, daca nu a fost gasit niciunul
      */
     public static GameLobby getGameLobbyByJoinCode(String joinCode) {
-        for(GameLobby gameLobby : gameLobbies) {
-            if(gameLobby.getJoinCode().equals(joinCode))
+        for (GameLobby gameLobby : gameLobbies) {
+            if (gameLobby.getJoinCode().equals(joinCode))
                 return gameLobby;
         }
 

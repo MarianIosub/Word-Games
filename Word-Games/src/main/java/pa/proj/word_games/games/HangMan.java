@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.Scanner;
 
 public class HangMan implements AbstractGame {
-    private static Word wordToGuess=new Word();
-    private static Word wordGuessed=new Word();
+    private static Word wordToGuess = new Word();
+    private static Word wordGuessed = new Word();
     private static Integer lifes;
     static Scanner scanner = null;
     private static Player player;
@@ -21,9 +21,11 @@ public class HangMan implements AbstractGame {
     public HangMan(ClientThread clientThread) {
         HangMan.clientThread = clientThread;
     }
-    public void addPlayer(Player player){
-        this.player=player;
+
+    public void addPlayer(Player player) {
+        this.player = player;
     }
+
     public static void gameLevel() throws IOException {
         String level = clientThread.sendMessageAndWaitForResponse("Alege nivelul de joc pe care il doresti: Usor, Mediu, Greu!");
         switch (level) {
@@ -45,6 +47,7 @@ public class HangMan implements AbstractGame {
             }
         }
     }
+
     public static void welcome() throws IOException {
         clientThread.sendMessageWithoutWaitingForResponse("Salut " + player.getName() + " si bine ai venit la jocul Spânzurătoarea!");
         clientThread.sendMessageWithoutWaitingForResponse("Regulile sunt dupa cum urmeaza:");
@@ -53,14 +56,16 @@ public class HangMan implements AbstractGame {
         clientThread.sendMessageWithoutWaitingForResponse("\t- ai grija la literele deja folosite sa nu le refolosesti inutil;");
         clientThread.sendMessageWithoutWaitingForResponse("MULT SUCCES!");
     }
+
     public static void initGuess() throws IOException {
         wordGuessed.setText("");
-        for(int index=0;index<wordToGuess.getText().length();index++){
-            wordGuessed.setText(wordGuessed.getText()+"*");
+        for (int index = 0; index < wordToGuess.getText().length(); index++) {
+            wordGuessed.setText(wordGuessed.getText() + "*");
 
         }
         clientThread.sendMessageWithoutWaitingForResponse(wordGuessed.getText());
     }
+
     public static void hangImage() throws IOException {
         if (lifes == 6) {
             clientThread.sendMessageWithoutWaitingForResponse("Nu ai nimerit, reincearca!");
@@ -68,8 +73,8 @@ public class HangMan implements AbstractGame {
             clientThread.sendMessageWithoutWaitingForResponse(" ");
             clientThread.sendMessageWithoutWaitingForResponse(" ");
             clientThread.sendMessageWithoutWaitingForResponse(" ");
-            clientThread.sendMessageWithoutWaitingForResponse("___|___");
             clientThread.sendMessageWithoutWaitingForResponse(" ");
+            clientThread.sendMessageWithoutWaitingForResponse("___|___");
         }
         if (lifes == 5) {
             clientThread.sendMessageWithoutWaitingForResponse("Nu ai nimerit, reincearca!");
@@ -144,40 +149,47 @@ public class HangMan implements AbstractGame {
             clientThread.sendMessageWithoutWaitingForResponse("AI PIERDUT! Cuvantul era: " + wordToGuess.getText());
         }
     }
+
     public static void checkLetter(String guess) throws IOException {
-        String newWord="";
-        for(int index=0;index<wordToGuess.getText().length();index++){
-            if(wordToGuess.getText().charAt(index)==guess.charAt(0)){
-                newWord+=guess.charAt(0);
-            }else if(wordGuessed.getText().charAt(index)!='*'){
-                newWord+=wordToGuess.getText().charAt(index);
-            }else{
-                newWord+="*";
+
+        String newWord = "";
+        for (int index = 0; index < wordToGuess.getText().length(); index++) {
+            if (wordGuessed.getText().charAt(index) == guess.charAt(0)) {
+                clientThread.sendMessageWithoutWaitingForResponse("Deja ai ghicit aceasta litera! Incearca una noua!");
+                return;
+            }
+            if (wordToGuess.getText().charAt(index) == guess.charAt(0)) {
+                newWord += guess.charAt(0);
+            } else if (wordGuessed.getText().charAt(index) != '*') {
+                newWord += wordToGuess.getText().charAt(index);
+            } else {
+                newWord += "*";
             }
         }
-        if(wordGuessed.getText().equals(newWord)){
+        if (wordGuessed.getText().equals(newWord)) {
             lifes--;
             hangImage();
-        }else{
+        } else {
             wordGuessed.setText(newWord);
         }
-        if(wordGuessed.getText().equals(wordToGuess.getText())){
+        if (wordGuessed.getText().equals(wordToGuess.getText())) {
             clientThread.sendMessageWithoutWaitingForResponse("Corect! Ai castigat! Cuvantul era: ");
-            clientThread.sendMessageWithoutWaitingForResponse(">>> "+wordToGuess.getText()+" <<<" );
-            lifes=0;
+            clientThread.sendMessageWithoutWaitingForResponse(">>> " + wordToGuess.getText() + " <<<");
+            lifes = 0;
             return;
         }
     }
+
     public void startGame() throws IOException {
         welcome();
         gameLevel();
         initGuess();
-        while(lifes>0){
+        while (lifes > 0) {
             clientThread.sendMessageWithoutWaitingForResponse("Pana acum, ai ghicit cuvantul:");
-            clientThread.sendMessageWithoutWaitingForResponse("  >> "+wordGuessed.getText()+" <<");
+            clientThread.sendMessageWithoutWaitingForResponse("  >> " + wordGuessed.getText() + " <<");
             String letter = clientThread.sendMessageAndWaitForResponse("Ghiceste o noua litera:");
 
-            if(letter.length()>1){
+            if (letter.length() > 1) {
                 clientThread.sendMessageWithoutWaitingForResponse("Poti introduce doar o litera!");
                 continue;
             }
