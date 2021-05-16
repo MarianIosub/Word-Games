@@ -19,6 +19,7 @@ public class Client {
 
     /**
      * Citeste un mesaj trimis de server.
+     *
      * @return Mesajul trimis de server.
      */
     public String readServerMessage() throws IOException {
@@ -31,6 +32,7 @@ public class Client {
 
     /**
      * Trimite un request catre server.
+     *
      * @param request Request-ul care va fi trimis.
      */
     public void sendRequest(String request) throws IOException {
@@ -46,7 +48,7 @@ public class Client {
      * Inchide socket-ul asociat clientului.
      */
     public void closeSocket() throws IOException {
-        if(!socket.isClosed())
+        if (!socket.isClosed())
             socket.close();
     }
 }

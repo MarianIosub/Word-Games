@@ -13,32 +13,30 @@ public class Main {
             int serverWaitsForResponse;
             String request;
 
-            while(true) {
+            while (true) {
                 // Afisez mesajul primit de la server
                 message = client.readServerMessage();
-                while(message == null) {
+                while (message == null) {
                     TimeUnit.SECONDS.sleep(1);
                     message = client.readServerMessage();
                 }
 
                 serverWaitsForResponse = Integer.parseInt(message.split(":::")[0]);
                 message = message.split(":::")[1];
-                if(!message.equals("dummy")) {
+                if (!message.equals("dummy")) {
                     System.out.println(message);
                 }
 
-                if(serverWaitsForResponse == 1) {
+                if (serverWaitsForResponse == 1) {
                     // Citesc raspunsul de la tastatura si il trimit
                     System.out.print(" >> ");
                     request = scanner.nextLine();
                     client.sendRequest(request);
-                }
-                else {
+                } else {
                     client.sendRequest("OK");
                 }
             }
-        }
-        catch(Exception exception) {
+        } catch (Exception exception) {
             exception.printStackTrace();
         }
     }
