@@ -57,9 +57,11 @@ public class WordRepository implements AbstractRepository<Word>
     {
         EntityManager entityManager = EntityFactoryManager.getInstance().createEntityManager();
 
-        String query = "SELECT 1 FROM Word w WHERE w.text LIKE ?1";
+        //String query = "SELECT 1 FROM Word w WHERE w.text LIKE ?1";
+        String query = "SELECT 1 FROM Word w WHERE SUBSTR(w.text, 1, 2) = ?1";
         TypedQuery<Integer> typedQuery = entityManager.createQuery(query, Integer.class);
-        typedQuery.setParameter(1,  pattern + "%");
+        //typedQuery.setParameter(1,  pattern + "%");
+        typedQuery.setParameter(1,  pattern);
 
         Integer result = 0;
         try

@@ -25,6 +25,9 @@ public class Main {
                 message = message.split(":::")[1];
                 if (!message.equals("dummy")) {
                     System.out.println(message);
+
+                    if(message.equals("La revedere!"))
+                        return;
                 }
 
                 if (serverWaitsForResponse == 1) {

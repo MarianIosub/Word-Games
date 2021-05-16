@@ -1,6 +1,5 @@
 package pa.proj.word_games.games;
 
-import com.sun.security.ntlm.Client;
 import pa.proj.word_games.controllers.WordController;
 import pa.proj.word_games.managers.EntityFactoryManager;
 import pa.proj.word_games.server.components.GameLobby;
@@ -29,8 +28,6 @@ public class FazanGame implements AbstractGame {
      * Retine lobby-ul in care se joaca jocul.
      */
     private GameLobby gameLobby;
-
-    // TODO: use Word() instead of String
 
     /**
      * Verifica daca un cuvant este valid (daca apare in baza de date).
@@ -247,7 +244,6 @@ public class FazanGame implements AbstractGame {
     private String sendMessageToAllClientsAndWaitResponseFromCertainClient(String message, ClientThread client) throws IOException {
         for (ClientThread clientThread : clientThreads) {
             if (clientThread != client)
-                //clientThread.sendMessageWithoutWaitingForResponse("dummy");
                 clientThread.sendMessageWithoutWaitingForResponse(message);
         }
         return client.sendMessageAndWaitForResponse(message);
