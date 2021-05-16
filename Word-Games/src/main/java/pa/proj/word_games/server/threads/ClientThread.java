@@ -94,7 +94,10 @@ public class ClientThread extends Thread {
                                     this.gameLobby = gameLobbyObj;
 
                                     gameLobby.waitUntilGameStarted(this);
-                                    gameLobby.startGame(this);
+                                    if(gameLobby != null && !gameLobby.destroyed)
+                                        gameLobby.startGame(this);
+
+                                    break;
                                 }
                                 case 0: {
                                     sendMessageWithoutWaitingForResponse("Esti deja in acest lobby.");
@@ -116,7 +119,7 @@ public class ClientThread extends Thread {
                             sendMessageWithoutWaitingForResponse("\t2 - Type Fast");
                             gameName = sendMessageAndWaitForResponse("\t3 - HangMan");
 
-                            if(gameName.equals("1") || gameName.equals("2"))
+                            if(gameName.equals("1") || gameName.equals("2") || gameName.equals("3"))
                                 break;
 
                             sendMessageWithoutWaitingForResponse("Raspuns invalid!");
@@ -236,5 +239,4 @@ public class ClientThread extends Thread {
     // TODO: de inlocuit Player cu noul User
 
     // TODO: sa poti schimba lobby-ul dupa ce te-ai conectat la unul (nu ca si owner)
-    // TODO: sa nu se inchida procesul dupa ce se termina un joc (ca si jucator, nu ca si owner)
 }

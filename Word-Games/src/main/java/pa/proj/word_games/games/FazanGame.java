@@ -29,8 +29,6 @@ public class FazanGame implements AbstractGame {
      */
     private GameLobby gameLobby;
 
-    // TODO: use Word() instead of String
-
     /**
      * Verifica daca un cuvant este valid (daca apare in baza de date).
      *
@@ -246,7 +244,6 @@ public class FazanGame implements AbstractGame {
     private String sendMessageToAllClientsAndWaitResponseFromCertainClient(String message, ClientThread client) throws IOException {
         for (ClientThread clientThread : clientThreads) {
             if (clientThread != client)
-                //clientThread.sendMessageWithoutWaitingForResponse("dummy");
                 clientThread.sendMessageWithoutWaitingForResponse(message);
         }
         return client.sendMessageAndWaitForResponse(message);

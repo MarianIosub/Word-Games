@@ -55,6 +55,11 @@ public class GameLobby {
     private ClientThread owner;
 
     /**
+     * Indica daca lobby-ul a fost distrus sau nu.
+     */
+    public boolean destroyed = false;
+
+    /**
      * Indica daca a inceput jocul sau nu.
      */
     public boolean gameStarted = false;
@@ -125,13 +130,8 @@ public class GameLobby {
     /**
      * Incepe jocul pentru acest lobby.
      */
-    public void startGame(ClientThread clientThread) throws IOException, InterruptedException {
+    public synchronized void startGame(ClientThread clientThread) throws IOException, InterruptedException {
         gameStarted = true;
-
-        numberOfConnectedPlayers++;
-        while (numberOfConnectedPlayers < clients.size()) {
-            TimeUnit.SECONDS.sleep(1);
-        }
 
         GameLobby.mapOfGames.get(this).initialize(clients);
         GameLobby.mapOfGames.get(this).startGame();
@@ -145,9 +145,11 @@ public class GameLobby {
      * @param clientThread Thread-ul clientului care a apelat functia.
      */
     public void waitUntilGameStarted(ClientThread clientThread) throws InterruptedException, IOException {
-        while (!gameStarted)
+        while (!gameStarted && !destroyed)
             TimeUnit.SECONDS.sleep(1);
-        clientThread.sendMessageWithoutWaitingForResponse("A inceput jocul!");
+
+        if(!destroyed)
+            clientThread.sendMessageWithoutWaitingForResponse("A inceput jocul!");
     }
 
     /**
@@ -181,5 +183,7 @@ public class GameLobby {
         joinCode = null;
         clients = null;
         owner = null;
+        gameStarted = false;
+        destroyed = true;
     }
 }
