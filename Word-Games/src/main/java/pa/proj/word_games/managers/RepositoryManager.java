@@ -7,6 +7,7 @@ import pa.proj.word_games.repositories.WordRepository;
  */
 public class RepositoryManager
 {
+    // TODO: de adaugat repository-urile + de modificat in controllere (si unde se mai folosesc repository-uri)
     private WordRepository wordRepository;
 
     private static RepositoryManager instance = null;

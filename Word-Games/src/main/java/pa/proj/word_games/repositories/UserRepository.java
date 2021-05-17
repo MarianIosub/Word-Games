@@ -1,6 +1,7 @@
 package pa.proj.word_games.repositories;
 
 import pa.proj.word_games.managers.EntityFactoryManager;
+import pa.proj.word_games.models.TypeFastScore;
 import pa.proj.word_games.models.User;
 
 import javax.persistence.EntityManager;
@@ -88,7 +89,7 @@ public class UserRepository implements AbstractRepository<User> {
         catch(Exception ignored)
         {
             entityManager.close();
-            return 0;
+            return 1;
         }
     }
 
@@ -137,5 +138,37 @@ public class UserRepository implements AbstractRepository<User> {
 
         entityManager.close();
         return user;
+    }
+
+    @Override
+    public User update(User newUser) {
+        if(newUser == null)
+            throw new NullPointerException();
+
+        String query = "SELECT u FROM User u WHERE u.id=?1";
+
+        EntityManager entityManager = EntityFactoryManager.getInstance().createEntityManager();
+        EntityTransaction entityTransaction = entityManager.getTransaction();
+
+        TypedQuery<User> typedQuery = entityManager.createQuery(query, User.class);
+        typedQuery.setParameter(1, newUser.getId());
+
+        User user = null;
+        try
+        {
+            entityTransaction.begin();
+            user = typedQuery.getSingleResult();
+            user.setUsername(newUser.getUsername());
+            user.setPassword(newUser.getPassword());
+            entityTransaction.commit();
+        }
+        catch(Exception ignored)
+        {
+            entityManager.close();
+            return null;
+        }
+
+        entityManager.close();
+        return newUser;
     }
 }

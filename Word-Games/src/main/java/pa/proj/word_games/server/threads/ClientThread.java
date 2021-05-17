@@ -1,5 +1,6 @@
 package pa.proj.word_games.server.threads;
 
+import pa.proj.word_games.controllers.ScoreController;
 import pa.proj.word_games.controllers.UserController;
 import pa.proj.word_games.models.User;
 import pa.proj.word_games.server.components.GameLobby;
@@ -10,6 +11,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.Map;
 
 public class ClientThread extends Thread {
     private Socket socket = null;
@@ -42,6 +44,7 @@ public class ClientThread extends Thread {
             sendMessageWithoutWaitingForResponse("\t2 - Create Lobby");
             sendMessageWithoutWaitingForResponse("\t3 - Start Game");
             sendMessageWithoutWaitingForResponse("\t4 - Inchide lobby-ul (daca esti creatorul acestuia)");
+            sendMessageWithoutWaitingForResponse("\t5 - Vreau sa-mi vad punctajele");
             response = sendMessageAndWaitForResponse("\t0 - Exit");
 
             if(response.equals("0")){ // Exit
@@ -160,6 +163,15 @@ public class ClientThread extends Thread {
                     }
 
                     gameLobby.destroyLobby();
+                    break;
+                }
+
+                case "5" : { // Vreau sa-mi vad punctajele
+                    Map<String, Integer> playerScores = ScoreController.getScoresByUserId(user.getId());
+                    sendMessageWithoutWaitingForResponse("Punctajele tale sunt: ");
+                    sendMessageWithoutWaitingForResponse("\tFazan -> " + playerScores.get("fazan"));
+                    sendMessageWithoutWaitingForResponse("\tSpanzuratoarea -> " + playerScores.get("hangman"));
+                    sendMessageWithoutWaitingForResponse("\tTypeFast -> " + playerScores.get("typefast"));
                     break;
                 }
 
@@ -307,6 +319,4 @@ public class ClientThread extends Thread {
 
         return in.readLine();
     }
-
-    // TODO: sistem de puncte/jocuri castigate pentru games (tabela in functie de id user)
 }

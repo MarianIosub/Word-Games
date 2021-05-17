@@ -2,7 +2,9 @@ package pa.proj.word_games.games;
 
 import pa.proj.word_games.controllers.WordController;
 import pa.proj.word_games.managers.EntityFactoryManager;
+import pa.proj.word_games.models.HangmanScore;
 import pa.proj.word_games.models.Word;
+import pa.proj.word_games.repositories.HangmanScoreRepository;
 import pa.proj.word_games.server.threads.ClientThread;
 
 import java.io.IOException;
@@ -169,6 +171,20 @@ public class HangMan implements AbstractGame {
             clientThread.sendMessageWithoutWaitingForResponse("Corect! Ai castigat! Cuvantul era: ");
             clientThread.sendMessageWithoutWaitingForResponse(">>> " + wordToGuess.getText() + " <<<");
             lifes = 0;
+
+            // Adaug un punct scorului sau de la acest joc
+            HangmanScore hangmanScore = HangmanScoreRepository.getInstance().findById(clientThread.getUser().getId());
+            if(hangmanScore == null) {
+                hangmanScore = new HangmanScore(
+                        HangmanScoreRepository.getInstance().getNextAvailableId(), clientThread.getUser().getId(), 0
+                );
+                HangmanScoreRepository.getInstance().save(hangmanScore);
+            }
+
+            hangmanScore.setScore(hangmanScore.getScore() + 1);
+            HangmanScoreRepository.getInstance().update(hangmanScore);
+            clientThread.sendMessageWithoutWaitingForResponse("Ai primit un punct!");
+
             return;
         }
     }

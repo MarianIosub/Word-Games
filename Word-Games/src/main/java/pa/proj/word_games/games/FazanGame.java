@@ -1,7 +1,9 @@
 package pa.proj.word_games.games;
 
 import pa.proj.word_games.controllers.WordController;
+import pa.proj.word_games.models.FazanScore;
 import pa.proj.word_games.models.User;
+import pa.proj.word_games.repositories.FazanScoreRepository;
 import pa.proj.word_games.server.components.GameLobby;
 import pa.proj.word_games.server.threads.ClientThread;
 
@@ -316,5 +318,22 @@ public class FazanGame implements AbstractGame {
 
         // Afisarea player-ului pierzator
         sendMessageToAllClients(clientThreads.get(startingPlayerIndex).getUser().getUsername() + " a pierdut jocul de Fazan!");
+
+        // Adaug cate un punct fiecarui jucator, cu exceptia pierzatorului
+        for(int index = 0; index < clientThreads.size(); index++) {
+            if(index != startingPlayerIndex) {
+                FazanScore fazanScore = FazanScoreRepository.getInstance().findById(clientThreads.get(index).getUser().getId());
+                if(fazanScore == null) {
+                    fazanScore = new FazanScore(
+                            FazanScoreRepository.getInstance().getNextAvailableId(), clientThreads.get(index).getUser().getId(), 0
+                    );
+                    FazanScoreRepository.getInstance().save(fazanScore);
+                }
+
+                fazanScore.setScore(fazanScore.getScore() + 1);
+                FazanScoreRepository.getInstance().update(fazanScore);
+                clientThreads.get(index).sendMessageWithoutWaitingForResponse("Ai castigat un punct!");
+            }
+        }
     }
 }

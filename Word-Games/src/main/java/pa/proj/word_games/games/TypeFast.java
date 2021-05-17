@@ -1,7 +1,9 @@
 package pa.proj.word_games.games;
 
 import pa.proj.word_games.controllers.WordController;
+import pa.proj.word_games.models.TypeFastScore;
 import pa.proj.word_games.models.Word;
+import pa.proj.word_games.repositories.TypeFastScoreRepository;
 import pa.proj.word_games.server.threads.ClientThread;
 
 import java.io.IOException;
@@ -51,11 +53,12 @@ public class TypeFast implements AbstractGame {
 
     private void checkWord() throws IOException {
         clientThread.sendMessageWithoutWaitingForResponse("Cuvintele care trebuie scrise sunt: ");
-        StringBuilder stringBuilder=new StringBuilder();
+        StringBuilder stringBuilder = new StringBuilder();
         for (Word word : words) {
-            stringBuilder.append(word.getText()+", ");
+            stringBuilder.append(word.getText() + ", ");
         }
         clientThread.sendMessageWithoutWaitingForResponse(stringBuilder.toString());
+
         Word wordRead = new Word();
 
         wordRead.setText(clientThread.sendMessageAndWaitForResponse("Introdu cuvantul rapid "));
@@ -72,6 +75,21 @@ public class TypeFast implements AbstractGame {
         clientThread.sendMessageWithoutWaitingForResponse("  >>cuvinte corecte:  " + correctWords);
         clientThread.sendMessageWithoutWaitingForResponse("  >>cuvinte gresite:  " + badWords);
         clientThread.sendMessageWithoutWaitingForResponse("Felicitari!");
+
+        if(correctWords > badWords) {
+            // Adaug un punct scorului sau de la acest joc
+            TypeFastScore typeFastScore = TypeFastScoreRepository.getInstance().findById(clientThread.getUser().getId());
+            if(typeFastScore == null) {
+                typeFastScore = new TypeFastScore(
+                        TypeFastScoreRepository.getInstance().getNextAvailableId(), clientThread.getUser().getId(), 0
+                );
+                TypeFastScoreRepository.getInstance().save(typeFastScore);
+            }
+
+            typeFastScore.setScore(typeFastScore.getScore() + 1);
+            TypeFastScoreRepository.getInstance().update(typeFastScore);
+            clientThread.sendMessageWithoutWaitingForResponse("Ai primit un punct!");
+        }
     }
 
     public void typeFastGame() throws IOException {

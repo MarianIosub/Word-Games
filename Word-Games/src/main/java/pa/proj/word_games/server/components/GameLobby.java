@@ -133,10 +133,12 @@ public class GameLobby {
     public synchronized void startGame(ClientThread clientThread) throws IOException, InterruptedException {
         gameStarted = true;
 
-        GameLobby.mapOfGames.get(this).initialize(clients);
-        GameLobby.mapOfGames.get(this).startGame();
+        if(GameLobby.mapOfGames.get(this) != null) {
+            GameLobby.mapOfGames.get(this).initialize(clients);
+            GameLobby.mapOfGames.get(this).startGame();
 
-        destroyLobby();
+            destroyLobby();
+        }
     }
 
     /**

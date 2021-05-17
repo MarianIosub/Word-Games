@@ -9,9 +9,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
-/**
- * Primeste request-uri si, in functie de acestea, apeleaza functii din repository-uri.
- */
 public class WordController {
     /**
      * Extrage un cuvant random din baza de date.

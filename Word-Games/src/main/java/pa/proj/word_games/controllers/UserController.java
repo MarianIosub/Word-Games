@@ -1,11 +1,14 @@
 package pa.proj.word_games.controllers;
 
+import pa.proj.word_games.models.FazanScore;
+import pa.proj.word_games.models.HangmanScore;
+import pa.proj.word_games.models.TypeFastScore;
 import pa.proj.word_games.models.User;
+import pa.proj.word_games.repositories.FazanScoreRepository;
+import pa.proj.word_games.repositories.HangmanScoreRepository;
+import pa.proj.word_games.repositories.TypeFastScoreRepository;
 import pa.proj.word_games.repositories.UserRepository;
 
-/**
- * Primeste request-uri si, in functie de acestea, apeleaza functii din repository-uri.
- */
 public class UserController {
     /**
      * Adauga un nou utilizator in baza de date.
@@ -25,6 +28,15 @@ public class UserController {
                 UserRepository.getInstance().getNextAvailableId(), username, password
         );
         UserRepository.getInstance().save(newUser);
+        FazanScoreRepository.getInstance().save(new FazanScore(
+                FazanScoreRepository.getInstance().getNextAvailableId(), newUser.getId(), 0)
+        );
+        HangmanScoreRepository.getInstance().save(new HangmanScore(
+                HangmanScoreRepository.getInstance().getNextAvailableId(), newUser.getId(), 0)
+        );
+        TypeFastScoreRepository.getInstance().save(new TypeFastScore(
+                TypeFastScoreRepository.getInstance().getNextAvailableId(), newUser.getId(), 0
+        ));
         return 1;
     }
 

@@ -10,6 +10,13 @@ public interface AbstractRepository<T>
     public T save(T object);
 
     /**
+     * Updateaza obiectul din baza de date cu datele din noul obiect
+     * @param newObject Obiectul, cu datele actualizate.
+     * @return Obiectul, daca acesta a fost actualizat; NULL, altfel.
+     */
+    public T update(T newObject);
+
+    /**
      * Cauta un obiect dupa un anumit id.
      * @param id Id-ul dupa care se face cautarea
      * @return Obiectul gasit; NULL, daca nu exista un obiect cu acest id in baza de date

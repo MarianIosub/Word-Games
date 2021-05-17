@@ -162,4 +162,35 @@ public class WordRepository implements AbstractRepository<Word>
         entityManager.close();
         return word;
     }
+
+    @Override
+    public Word update(Word newWord) {
+        if(newWord == null)
+            throw new NullPointerException();
+
+        String query = "SELECT w FROM Word w WHERE w.id=?1";
+
+        EntityManager entityManager = EntityFactoryManager.getInstance().createEntityManager();
+        EntityTransaction entityTransaction = entityManager.getTransaction();
+
+        TypedQuery<Word> typedQuery = entityManager.createQuery(query, Word.class);
+        typedQuery.setParameter(1, newWord.getId());
+
+        Word word = null;
+        try
+        {
+            entityTransaction.begin();
+            word = typedQuery.getSingleResult();
+            word.setText(newWord.getText());
+            entityTransaction.commit();
+        }
+        catch(Exception ignored)
+        {
+            entityManager.close();
+            return null;
+        }
+
+        entityManager.close();
+        return newWord;
+    }
 }
