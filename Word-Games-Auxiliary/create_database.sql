@@ -62,6 +62,3 @@ COMMIT;
 -- SELECT count(*) FROM words;
 
 -- select * from words where id = 166920;
-
-INSERT into words values(1, 'banan');
-INSERT INTO words values(2, 'aaaaaaa');

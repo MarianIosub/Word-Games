@@ -1,11 +1,10 @@
 package pa.proj.word_games.controllers;
 
-import pa.proj.word_games.managers.RepositoryManager;
 import pa.proj.word_games.models.Word;
+import pa.proj.word_games.repositories.WordRepository;
 
 import java.io.IOException;
 import java.text.Normalizer;
-import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
@@ -16,16 +15,15 @@ public class WordController {
      * @throws IOException
      */
     private static Word extractWord() throws IOException {
-        RepositoryManager repositoryManager = RepositoryManager.getInstance();
         Random random = new Random();
         int numberOfRepeats = random.nextInt(100);
         int generatedId = 0;
 
         while (numberOfRepeats != 0) {
-            generatedId = random.nextInt(repositoryManager.getWordRepository().getNumberOfEntries().intValue());
+            generatedId = random.nextInt(WordRepository.getInstance().getNumberOfEntries().intValue());
             numberOfRepeats--;
         }
-        return repositoryManager.getWordRepository().findById(generatedId);
+        return WordRepository.getInstance().findById(generatedId);
     }
 
     /**
@@ -48,8 +46,7 @@ public class WordController {
      * @throws IOException
      */
     public static boolean verifyWordExistence(String word) throws IOException {
-        RepositoryManager repositoryManager = RepositoryManager.getInstance();
-        return repositoryManager.getWordRepository().findByText(word) != null;
+        return WordRepository.getInstance().findByText(word) != null;
     }
 
     /**
@@ -130,8 +127,7 @@ public class WordController {
      * @return true, daca exista cel putin un cuvant; false, altfel
      */
     public static boolean existsWordsWithStartPattern(String pattern) {
-        RepositoryManager repositoryManager = RepositoryManager.getInstance();
-        Integer result = repositoryManager.getWordRepository().findByStartPattern(pattern);
+        Integer result = WordRepository.getInstance().findByStartPattern(pattern);
         if (result == 1)
             return true;
 
@@ -139,7 +135,7 @@ public class WordController {
             return false;
 
         // Caut fara sa tin cont de diacritici
-        result = repositoryManager.getWordRepository().findByStartPattern(stringWithoutDiacritics(pattern));
+        result = WordRepository.getInstance().findByStartPattern(stringWithoutDiacritics(pattern));
         return result == 1;
     }
 }
