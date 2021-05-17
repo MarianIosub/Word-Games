@@ -37,7 +37,7 @@ public class TypeFast implements AbstractGame {
 
     private void extractWords() throws IOException {
 
-        for (int index = 0; index < 20; index++) {
+        for (int index = 0; index < 30; index++) {
             Word word = new Word();
             Random random = new Random();
             if (random.nextInt() % 2 == 0) {
@@ -51,10 +51,11 @@ public class TypeFast implements AbstractGame {
 
     private void checkWord() throws IOException {
         clientThread.sendMessageWithoutWaitingForResponse("Cuvintele care trebuie scrise sunt: ");
+        StringBuilder stringBuilder=new StringBuilder();
         for (Word word : words) {
-            clientThread.sendMessageWithoutWaitingForResponse(word.getText() + ", ");
+            stringBuilder.append(word.getText()+", ");
         }
-
+        clientThread.sendMessageWithoutWaitingForResponse(stringBuilder.toString());
         Word wordRead = new Word();
 
         wordRead.setText(clientThread.sendMessageAndWaitForResponse("Introdu cuvantul rapid "));
