@@ -10,12 +10,11 @@ import java.util.Locale;
 import java.util.Random;
 
 /**
- * Primeste request-uri si, in functie de acesta, apeleaza functii din repository-uri.
+ * Primeste request-uri si, in functie de acestea, apeleaza functii din repository-uri.
  */
 public class WordController {
     /**
      * Extrage un cuvant random din baza de date.
-     *
      * @return Cuvantul extras.
      * @throws IOException
      */
@@ -34,7 +33,6 @@ public class WordController {
 
     /**
      * Elimina diacriticile din string-ul dat ca si parametru.
-     *
      * @param text Un string.
      * @return Parametrul string dat, dar fara diacritice.
      */
@@ -48,7 +46,6 @@ public class WordController {
 
     /**
      * Verifica daca un cuvant se afla in baza de date.
-     *
      * @param word Cuvantul care va fi verificat.
      * @return true, daca am gasit cuvantul in baza de date; false, atlfel
      * @throws IOException
@@ -60,7 +57,6 @@ public class WordController {
 
     /**
      * Extrage un cuvant random, cu lungimea in intervalul [3,6], din baza de date.
-     *
      * @return Cuvantul extras.
      * @throws IOException
      */
@@ -81,7 +77,6 @@ public class WordController {
 
     /**
      * Extrage un cuvant random, cu lungimea in intervalul [7,9], din baza de date.
-     *
      * @return Cuvantul extras.
      * @throws IOException
      */
@@ -102,7 +97,6 @@ public class WordController {
 
     /**
      * Extrage un cuvant random, cu lungimea mai mare decat 9, din baza de date.
-     *
      * @return Cuvantul extras.
      * @throws IOException
      */
@@ -123,7 +117,6 @@ public class WordController {
 
     /**
      * Verifica daca doua cuvinte sunt asemanatoare, chiar daca unul dintre ele sau ambele contin diacritici.
-     *
      * @param word1 Primul cuvant.
      * @param word2 Al doilea cuvant.
      * @return true, daca cuvintele date sunt asemanatoare; false, altfel
@@ -136,7 +129,6 @@ public class WordController {
 
     /**
      * Verifica daca exista in baza de date cuvinte care incep cu un anumit pattern.
-     *
      * @param pattern Pattern-ul.
      * @return true, daca exista cel putin un cuvant; false, altfel
      */

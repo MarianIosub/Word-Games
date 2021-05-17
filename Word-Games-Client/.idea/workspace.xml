@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1e2015fb-b56c-4b1c-9b88-868a3309d2c5" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Word-Games/src/main/java/pa/proj/word_games/games/HangMan.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Word-Games/src/main/java/pa/proj/word_games/games/HangMan.java" afterDir="false" />
-    </list>
+    <list default="true" id="1e2015fb-b56c-4b1c-9b88-868a3309d2c5" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

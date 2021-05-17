@@ -1,5 +1,6 @@
 import pa.proj.word_games_client.Client;
 
+import java.net.SocketException;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
@@ -39,7 +40,11 @@ public class Main {
                     client.sendRequest("OK");
                 }
             }
-        } catch (Exception exception) {
+        }
+        catch(SocketException socketException) {
+            System.out.println("Conexiunea cu server-ul s-a intrerupt brusc!");
+        }
+        catch (Exception exception) {
             exception.printStackTrace();
         }
     }

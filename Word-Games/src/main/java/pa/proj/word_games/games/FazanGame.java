@@ -1,7 +1,7 @@
 package pa.proj.word_games.games;
 
 import pa.proj.word_games.controllers.WordController;
-import pa.proj.word_games.managers.EntityFactoryManager;
+import pa.proj.word_games.models.User;
 import pa.proj.word_games.server.components.GameLobby;
 import pa.proj.word_games.server.threads.ClientThread;
 
@@ -17,7 +17,7 @@ public class FazanGame implements AbstractGame {
     /**
      * Retine scorul unui jucator.
      */
-    private Map<Player, Integer> playerScores;
+    private Map<User, Integer> playerScores;
 
     /**
      * Thread-urile care comunica cu clientii din joc (Lista jucatorilor).
@@ -118,7 +118,7 @@ public class FazanGame implements AbstractGame {
         do {
             turnNumber++;
 
-            sendMessageToAllClients("Tura jucatorului " + clientThreads.get(playerTurnIndex).getUser().getName());
+            sendMessageToAllClients("Tura jucatorului " + clientThreads.get(playerTurnIndex).getUser().getUsername());
             if (previousWord.length() == 1)
                 actualWord = sendMessageToAllClientsAndWaitResponseFromCertainClient(
                         "Caracterul cu care trebuie sa inceapa litera: " + previousWord,
@@ -130,7 +130,7 @@ public class FazanGame implements AbstractGame {
                         clientThreads.get(playerTurnIndex)
                 );
 
-            sendMessageToAllClientsExceptCertainOne("Jucatorul " + clientThreads.get(playerTurnIndex).getUser().getName() +
+            sendMessageToAllClientsExceptCertainOne("Jucatorul " + clientThreads.get(playerTurnIndex).getUser().getUsername() +
                     "a introdus cuvantul \"" + actualWord + "\".", clientThreads.get(playerTurnIndex));
 
             while (true) {
@@ -154,7 +154,7 @@ public class FazanGame implements AbstractGame {
                 else
                     break;
 
-                sendMessageToAllClientsExceptCertainOne("Jucatorul " + clientThreads.get(playerTurnIndex).getUser().getName() +
+                sendMessageToAllClientsExceptCertainOne("Jucatorul " + clientThreads.get(playerTurnIndex).getUser().getUsername() +
                         "a introdus cuvantul \"" + actualWord + "\".", clientThreads.get(playerTurnIndex));
             }
 
@@ -165,7 +165,7 @@ public class FazanGame implements AbstractGame {
         } while (!verifyEndOfFazanGame(actualWord));
 
         // Afisarea pierzatorului si updatarea scorului acestuia
-        sendMessageToAllClients("In runda " + roundNumber + " a pierdut jucatorul " + clientThreads.get(playerTurnIndex).getUser().getName() + ".");
+        sendMessageToAllClients("In runda " + roundNumber + " a pierdut jucatorul " + clientThreads.get(playerTurnIndex).getUser().getUsername() + ".");
         playerScores.replace(clientThreads.get(playerTurnIndex).getUser(),
                 playerScores.get(clientThreads.get(playerTurnIndex).getUser()) - 1);
         return playerTurnIndex;
@@ -190,10 +190,10 @@ public class FazanGame implements AbstractGame {
     private void printPlayerScores() throws IOException {
         sendMessageToAllClients("Scorul fiecarui jucator: \n");
         for (ClientThread clientThread : clientThreads) {
-            Player player = clientThread.getUser();
+            User user = clientThread.getUser();
             StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append("\t").append(player.getName()).append(" - ");
-            switch (playerScores.get(player)) {
+            stringBuilder.append("\t").append(user.getUsername()).append(" - ");
+            switch (playerScores.get(user)) {
                 case 5: {
                     stringBuilder.append("");
                     break;
@@ -304,6 +304,9 @@ public class FazanGame implements AbstractGame {
         }
 
         // Afisarea player-ului pierzator
-        sendMessageToAllClients(clientThreads.get(startingPlayerIndex).getUser().getName() + " a pierdut jocul de Fazan!");
+        sendMessageToAllClients(clientThreads.get(startingPlayerIndex).getUser().getUsername() + " a pierdut jocul de Fazan!");
     }
+
+    // TODO: Set a limited time in which a certain player can give a word (until he is declared as the loser) or a limit
+    //  of wrong words (duplicated/invalid/not following rules)
 }

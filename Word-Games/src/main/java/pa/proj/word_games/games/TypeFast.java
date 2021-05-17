@@ -23,10 +23,10 @@ public class TypeFast implements AbstractGame {
     public TypeFast() { }
 
     private void Welcome() throws IOException {
-        clientThread.sendMessageWithoutWaitingForResponse("Salut si bine ai venit la \"Fast typing words!\"!");
+        clientThread.sendMessageWithoutWaitingForResponse("Salut " + clientThread.getUser().getUsername() + " si bine ai venit la \"Fast typing words!\"!");
         clientThread.sendMessageWithoutWaitingForResponse("Scopul acestui joc este de a vedea cat de rapid poti sa scrii!");
         clientThread.sendMessageWithoutWaitingForResponse("Astfel incat incearca sa scrii cat mai multe cuvinte corecte");
-        clientThread.sendMessageWithoutWaitingForResponse("                IN UN SINGUR MINUT                ");
+        clientThread.sendMessageWithoutWaitingForResponse("                INTR-UN SINGUR MINUT                ");
     }
 
     private long timeRemaining() {
@@ -67,7 +67,7 @@ public class TypeFast implements AbstractGame {
     }
 
     public void end() throws IOException {
-        clientThread.sendMessageWithoutWaitingForResponse("In un minut ai reusit sa scrii: ");
+        clientThread.sendMessageWithoutWaitingForResponse("Intr-un minut ai reusit sa scrii: ");
         clientThread.sendMessageWithoutWaitingForResponse("  >>cuvinte corecte:  " + correctWords);
         clientThread.sendMessageWithoutWaitingForResponse("  >>cuvinte gresite:  " + badWords);
         clientThread.sendMessageWithoutWaitingForResponse("Felicitari!");

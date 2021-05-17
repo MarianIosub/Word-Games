@@ -13,16 +13,10 @@ public class HangMan implements AbstractGame {
     private  Word wordToGuess = new Word();
     private  Word wordGuessed = new Word();
     private  Integer lifes;
-    ;
-    private  Player player;
     private static ClientThread clientThread;
 
     public HangMan(ClientThread clientThread) {
         HangMan.clientThread = clientThread;
-    }
-
-    public void addPlayer(Player player) {
-        this.player = player;
     }
 
     public  void gameLevel() throws IOException {
@@ -48,7 +42,7 @@ public class HangMan implements AbstractGame {
     }
 
     public  void welcome() throws IOException {
-        clientThread.sendMessageWithoutWaitingForResponse("Salut " + player.getName() + " si bine ai venit la jocul Spânzurătoarea!");
+        clientThread.sendMessageWithoutWaitingForResponse("Salut " + clientThread.getUser().getUsername() + " si bine ai venit la jocul Spânzurătoarea!");
         clientThread.sendMessageWithoutWaitingForResponse("Regulile sunt dupa cum urmeaza:");
         clientThread.sendMessageWithoutWaitingForResponse("\t- incearca sa ghicesti pe rand fiecare litera pana cuvantul se umple;");
         clientThread.sendMessageWithoutWaitingForResponse("\t- ai doar 7 vieti disponibile pana vei fi spanzurat;");
@@ -198,6 +192,5 @@ public class HangMan implements AbstractGame {
 
     public void initialize(List<ClientThread> clientThreads) {
         lifes = 7;
-        addPlayer(new Player("PlayerName")); // TODO: de scos
     }
 }
