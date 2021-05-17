@@ -121,13 +121,8 @@ public class UserRepository implements AbstractRepository<User> {
         if(user == null)
             throw new NullPointerException();
 
-        User temp = findById(user.getId());
-        if(temp != null)
-            return null;
-
         EntityManager entityManager = EntityFactoryManager.getInstance().createEntityManager();
         EntityTransaction entityTransaction = entityManager.getTransaction();
-
         try
         {
             entityTransaction.begin();

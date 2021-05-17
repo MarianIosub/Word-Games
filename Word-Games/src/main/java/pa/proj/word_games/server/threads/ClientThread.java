@@ -1,7 +1,6 @@
 package pa.proj.word_games.server.threads;
 
 import pa.proj.word_games.controllers.UserController;
-import pa.proj.word_games.games.Player; // TODO: de scos?
 import pa.proj.word_games.models.User;
 import pa.proj.word_games.server.components.GameLobby;
 
@@ -308,8 +307,6 @@ public class ClientThread extends Thread {
 
         return in.readLine();
     }
-
-    // TODO: sa poti schimba lobby-ul dupa ce te-ai conectat la unul (nu ca si owner)
 
     // TODO: sistem de puncte/jocuri castigate pentru games (tabela in functie de id user)
 }

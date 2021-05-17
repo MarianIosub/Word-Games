@@ -113,10 +113,13 @@ public class FazanGame implements AbstractGame {
         List<String> usedWords = new ArrayList<>();
         String previousWord = String.valueOf(generateRandomAlphabetCharacter());
         String actualWord;
+        boolean forceEndGameSession = false; // Devine true cand un jucator introduce 5 cuvinte care nu respecta regulile/nu
+                                            // sunt valide/se repeta
 
         // Jocul
         do {
             turnNumber++;
+            int numberOfWrongWords = 0;
 
             sendMessageToAllClients("Tura jucatorului " + clientThreads.get(playerTurnIndex).getUser().getUsername());
             if (previousWord.length() == 1)
@@ -154,9 +157,17 @@ public class FazanGame implements AbstractGame {
                 else
                     break;
 
+                numberOfWrongWords++;
                 sendMessageToAllClientsExceptCertainOne("Jucatorul " + clientThreads.get(playerTurnIndex).getUser().getUsername() +
                         "a introdus cuvantul \"" + actualWord + "\".", clientThreads.get(playerTurnIndex));
+
+                if(numberOfWrongWords >= 4) {
+                    forceEndGameSession = true;
+                    break;
+                }
             }
+
+            if(forceEndGameSession) break;
 
             usedWords.add(actualWord.toLowerCase(Locale.ROOT));
             previousWord = actualWord;
@@ -306,7 +317,4 @@ public class FazanGame implements AbstractGame {
         // Afisarea player-ului pierzator
         sendMessageToAllClients(clientThreads.get(startingPlayerIndex).getUser().getUsername() + " a pierdut jocul de Fazan!");
     }
-
-    // TODO: Set a limited time in which a certain player can give a word (until he is declared as the loser) or a limit
-    //  of wrong words (duplicated/invalid/not following rules)
 }

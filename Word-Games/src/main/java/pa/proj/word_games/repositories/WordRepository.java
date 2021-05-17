@@ -145,13 +145,8 @@ public class WordRepository implements AbstractRepository<Word>
         if(word == null)
             throw new NullPointerException();
 
-        Word temp = findById(word.getId());
-        if(temp != null)
-            return null;
-
         EntityManager entityManager = EntityFactoryManager.getInstance().createEntityManager();
         EntityTransaction entityTransaction = entityManager.getTransaction();
-
         try
         {
             entityTransaction.begin();

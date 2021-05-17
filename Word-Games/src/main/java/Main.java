@@ -25,4 +25,8 @@ public class Main
     }
 
     // TODO: GUI
+
+    // TODO: Support for lobby change after entering one (or possibility to leave a lobby) in GUI
+
+    // TODO: Reset password available via GUI ?
 }
