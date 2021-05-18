@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1e2015fb-b56c-4b1c-9b88-868a3309d2c5" name="Default Changelist" comment="" />
+    <list default="true" id="1e2015fb-b56c-4b1c-9b88-868a3309d2c5" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../Word-Games/src/main/java/pa/proj/word_games/games/TypeFast.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Word-Games/src/main/java/pa/proj/word_games/games/TypeFast.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -72,6 +74,7 @@
       <workItem from="1621152153700" duration="618000" />
       <workItem from="1621160614730" duration="1480000" />
       <workItem from="1621194548260" duration="540000" />
+      <workItem from="1621339306194" duration="359000" />
     </task>
     <servers />
   </component>

@@ -71,9 +71,14 @@ public class TypeFast implements AbstractGame {
     }
 
     public void end() throws IOException {
-        clientThread.sendMessageWithoutWaitingForResponse("Intr-un minut ai reusit sa scrii: ");
+        clientThread.sendMessageWithoutWaitingForResponse("Intr-un minut ai reusit: ");
+        clientThread.sendMessageWithoutWaitingForResponse("  >>total cuvinte: "+(correctWords+badWords));
         clientThread.sendMessageWithoutWaitingForResponse("  >>cuvinte corecte:  " + correctWords);
         clientThread.sendMessageWithoutWaitingForResponse("  >>cuvinte gresite:  " + badWords);
+        double rating=(double)60/correctWords;
+        clientThread.sendMessageWithoutWaitingForResponse("  >>cuvinte corecte per secunda:  " + rating);
+        rating=(double)60/badWords;
+        clientThread.sendMessageWithoutWaitingForResponse("  >>cuvinte gresite per secunda:  " + rating);
         clientThread.sendMessageWithoutWaitingForResponse("Felicitari!");
 
         if(correctWords > badWords) {
