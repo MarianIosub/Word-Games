@@ -7,7 +7,6 @@ import pa.proj.word_games.models.Word;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.TypedQuery;
-import java.util.List;
 
 /**
  * Repository pentru clasa "Word" (respectiv, tabela "words").

@@ -1,7 +1,6 @@
 package pa.proj.word_games.repositories;
 
 import pa.proj.word_games.managers.EntityFactoryManager;
-import pa.proj.word_games.models.TypeFastScore;
 import pa.proj.word_games.models.User;
 
 import javax.persistence.EntityManager;

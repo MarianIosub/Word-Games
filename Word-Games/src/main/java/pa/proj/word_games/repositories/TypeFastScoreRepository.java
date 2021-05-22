@@ -1,7 +1,6 @@
 package pa.proj.word_games.repositories;
 
 import pa.proj.word_games.managers.EntityFactoryManager;
-import pa.proj.word_games.models.HangmanScore;
 import pa.proj.word_games.models.TypeFastScore;
 
 import javax.persistence.EntityManager;
@@ -21,7 +20,8 @@ public class TypeFastScoreRepository implements AbstractRepository<TypeFastScore
     }
 
     /**
-     * @return Urmatorul id disponibil.
+     * Cauta in baza de date cel mai mare id folosit la un scor pentru jocul TypeFast.
+     * @return Id-ul gasit + 1; 1, daca nu este inregistrat niciun id in baza de date.
      */
     public int getNextAvailableId() {
         EntityManager entityManager = EntityFactoryManager.getInstance().createEntityManager();

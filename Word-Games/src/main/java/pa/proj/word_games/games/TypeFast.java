@@ -1,9 +1,9 @@
 package pa.proj.word_games.games;
 
+import pa.proj.word_games.controllers.ScoreController;
 import pa.proj.word_games.controllers.WordController;
 import pa.proj.word_games.models.TypeFastScore;
 import pa.proj.word_games.models.Word;
-import pa.proj.word_games.repositories.TypeFastScoreRepository;
 import pa.proj.word_games.server.threads.ClientThread;
 
 import java.io.IOException;
@@ -22,8 +22,6 @@ public class TypeFast implements AbstractGame {
         this.clientThread = clientThread;
     }
 
-    public TypeFast() { }
-
     private void Welcome() throws IOException {
         clientThread.sendMessageWithoutWaitingForResponse("Salut " + clientThread.getUser().getUsername() + " si bine ai venit la \"Fast typing words!\"!");
         clientThread.sendMessageWithoutWaitingForResponse("Scopul acestui joc este de a vedea cat de rapid poti sa scrii!");
@@ -31,10 +29,9 @@ public class TypeFast implements AbstractGame {
         clientThread.sendMessageWithoutWaitingForResponse("                INTR-UN SINGUR MINUT                ");
     }
 
-    private long timeRemaining() {
+    private long timeElapsed() {
         long elapsedTime = System.currentTimeMillis() - startTime;
-        long elapsedSeconds = elapsedTime / 1000;
-        return elapsedSeconds;
+        return elapsedTime / 1000;
     }
 
     private void extractWords() throws IOException {
@@ -55,13 +52,16 @@ public class TypeFast implements AbstractGame {
         clientThread.sendMessageWithoutWaitingForResponse("Cuvintele care trebuie scrise sunt: ");
         StringBuilder stringBuilder = new StringBuilder();
         for (Word word : words) {
-            stringBuilder.append(word.getText() + ", ");
+            stringBuilder.append(word.getText()).append(", ");
         }
         clientThread.sendMessageWithoutWaitingForResponse(stringBuilder.toString());
+        if(timeElapsed() >= 60) return;
 
         Word wordRead = new Word();
 
         wordRead.setText(clientThread.sendMessageAndWaitForResponse("Introdu cuvantul rapid "));
+        if(timeElapsed() >= 60) return;
+
         if (wordRead.getText().equals(words.get(0).getText())) {
             correctWords++;
         } else {
@@ -71,28 +71,39 @@ public class TypeFast implements AbstractGame {
     }
 
     public void end() throws IOException {
-        clientThread.sendMessageWithoutWaitingForResponse("Intr-un minut ai reusit: ");
-        clientThread.sendMessageWithoutWaitingForResponse("  >>total cuvinte: "+(correctWords+badWords));
-        clientThread.sendMessageWithoutWaitingForResponse("  >>cuvinte corecte:  " + correctWords);
-        clientThread.sendMessageWithoutWaitingForResponse("  >>cuvinte gresite:  " + badWords);
-        double rating=(double)60/correctWords;
-        clientThread.sendMessageWithoutWaitingForResponse("  >>cuvinte corecte per secunda:  " + rating);
-        rating=(double)60/badWords;
-        clientThread.sendMessageWithoutWaitingForResponse("  >>cuvinte gresite per secunda:  " + rating);
+        long elapsedSeconds = timeElapsed();
+
+        clientThread.sendMessageWithoutWaitingForResponse("In " + Long.min(elapsedSeconds, 60) + " secunde ai scris: ");
+        clientThread.sendMessageWithoutWaitingForResponse("  >> " + (correctWords+badWords) + " cuvinte");
+        clientThread.sendMessageWithoutWaitingForResponse("  >> " + correctWords + " cuvinte corecte");
+        clientThread.sendMessageWithoutWaitingForResponse("  >> " + badWords + " cuvinte gresite");
+
+        clientThread.sendMessageWithoutWaitingForResponse(" ");
+        clientThread.sendMessageWithoutWaitingForResponse("Statistici:");
+
+        double rating = (double)(60 * (correctWords + badWords))/elapsedSeconds;
+        clientThread.sendMessageWithoutWaitingForResponse("  >> " + rating + " cuvinte per minut");
+
+        rating = (double)(60 * correctWords)/elapsedSeconds;
+        clientThread.sendMessageWithoutWaitingForResponse("  >> " + rating + " cuvinte corecte per minut");
+
+        rating = (double)(60 * badWords)/elapsedSeconds;
+        clientThread.sendMessageWithoutWaitingForResponse("  >> " + rating + " cuvinte gresite per minut");
+
         clientThread.sendMessageWithoutWaitingForResponse("Felicitari!");
 
         if(correctWords > badWords) {
             // Adaug un punct scorului sau de la acest joc
-            TypeFastScore typeFastScore = TypeFastScoreRepository.getInstance().findById(clientThread.getUser().getId());
+            TypeFastScore typeFastScore = ScoreController.getTypeFastScoreByUserId(clientThread.getUser().getId());
             if(typeFastScore == null) {
                 typeFastScore = new TypeFastScore(
-                        TypeFastScoreRepository.getInstance().getNextAvailableId(), clientThread.getUser().getId(), 0
+                        ScoreController.getNextTypeFastScoreAvailableId(), clientThread.getUser().getId(), 0
                 );
-                TypeFastScoreRepository.getInstance().save(typeFastScore);
+                ScoreController.saveTypeFastScore(typeFastScore);
             }
 
             typeFastScore.setScore(typeFastScore.getScore() + 1);
-            TypeFastScoreRepository.getInstance().update(typeFastScore);
+            ScoreController.updateTypeFastScore(typeFastScore);
             clientThread.sendMessageWithoutWaitingForResponse("Ai primit un punct!");
         }
     }
@@ -101,8 +112,8 @@ public class TypeFast implements AbstractGame {
         extractWords();
         Welcome();
         setStartTime(System.currentTimeMillis());
-        while (timeRemaining() <= 60 && words.size() != 0) {
-            clientThread.sendMessageWithoutWaitingForResponse("S-au scurs: " + timeRemaining() + " secunde.");
+        while (timeElapsed() <= 60 && words.size() != 0) {
+            clientThread.sendMessageWithoutWaitingForResponse("S-au scurs: " + timeElapsed() + " secunde.");
             checkWord();
         }
         end();
@@ -111,10 +122,6 @@ public class TypeFast implements AbstractGame {
     @Override
     public void startGame() throws IOException {
         typeFastGame();
-    }
-
-    public long getStartTime() {
-        return startTime;
     }
 
     public void setStartTime(long startTime) {
