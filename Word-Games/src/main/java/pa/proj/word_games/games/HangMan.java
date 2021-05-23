@@ -15,10 +15,21 @@ public class HangMan implements AbstractGame {
     private  Integer lifes;
     private static ClientThread clientThread;
 
+    /**
+     * Creeaza un joc Hang_Man caruia ii atribuie un un player
+     *
+     * @param clientThread - thread-ul player-ului care Joaca jocul
+     */
     public HangMan(ClientThread clientThread) {
         HangMan.clientThread = clientThread;
     }
 
+    /**
+     * Pune jucatorul sa isi aleaga nivelul de joc pe care doreste sa il joace
+     * la nivelul usor, lungimea cuvantului va fi pana in 6 litere, la mediu si greu lungimea acestora incrementandu-se
+     *
+     * @throws IOException
+     */
     public  void gameLevel() throws IOException {
         String level = clientThread.sendMessageAndWaitForResponse("Alege nivelul de joc pe care il doresti: Usor, Mediu, Greu!");
         switch (level) {
@@ -41,6 +52,11 @@ public class HangMan implements AbstractGame {
         }
     }
 
+    /**
+     * Inceutul jocului, care prezinta jucatorului regulile jocului Spanzuratoarea
+     *
+     * @throws IOException
+     */
     public  void welcome() throws IOException {
         clientThread.sendMessageWithoutWaitingForResponse("Salut " + clientThread.getUser().getUsername() + " si bine ai venit la jocul Spânzurătoarea!");
         clientThread.sendMessageWithoutWaitingForResponse("Regulile sunt dupa cum urmeaza:");
@@ -50,6 +66,11 @@ public class HangMan implements AbstractGame {
         clientThread.sendMessageWithoutWaitingForResponse("MULT SUCCES!");
     }
 
+    /**
+     * Initializeaza cuvantul ghicit pana la un moment dat cu atatea '*' cat are cuvantul pe care va trebui sa il ghiceasca
+     *
+     * @throws IOException
+     */
     public  void initGuess() throws IOException {
         wordGuessed.setText("");
         for (int index = 0; index < wordToGuess.getText().length(); index++) {
@@ -59,6 +80,11 @@ public class HangMan implements AbstractGame {
         clientThread.sendMessageWithoutWaitingForResponse(wordGuessed.getText());
     }
 
+    /**
+     * Prezinta jucatorului nivelul de spanzurare pana la momentul in care se afla, acesta depinzdand de un numar de vieti initializate
+     *
+     * @throws IOException
+     */
     public  void hangImage() throws IOException {
         if (lifes == 6) {
             clientThread.sendMessageWithoutWaitingForResponse("Nu ai nimerit, reincearca!");
@@ -143,6 +169,13 @@ public class HangMan implements AbstractGame {
         }
     }
 
+    /**
+     * Primeste o litera de la jucator
+     * Aceasta litera trece prin mai multe etape de verificare, precum daca a fost deja ghicita, daca e o litera nou ghicita, sau daca nu a ghicit, decremantand dumarul de vieti
+     *
+     * @param guess
+     * @throws IOException
+     */
     public  void checkLetter(String guess) throws IOException {
 
         String newWord = "";
@@ -187,6 +220,11 @@ public class HangMan implements AbstractGame {
         }
     }
 
+    /**
+     * Inceputul propriu-zis a jocului, prin care acesta introduce litere pana cand a terminat de ghicit cuvantul sau nu mai are vieti disponibile
+     *
+     * @throws IOException
+     */
     public void startGame() throws IOException {
         welcome();
         gameLevel();
@@ -204,6 +242,11 @@ public class HangMan implements AbstractGame {
         }
     }
 
+    /**
+     * initializeaza vietile jucatorului cu 7, specifice desenelor ce reprezinta nivelele jocului Spanzuratoarea
+     *
+     * @param clientThreads
+     */
     public void initialize(List<ClientThread> clientThreads) {
         lifes = 7;
     }

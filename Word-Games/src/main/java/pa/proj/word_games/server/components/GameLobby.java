@@ -76,6 +76,13 @@ public class GameLobby {
             joinCode = joinCode + characterSequence.charAt(random.nextInt(characterSequence.length()));
     }
 
+    /**
+     * Creeaza un lobby nou caruia ii atribuie player-ul proprietar, tipul de joc care se va juca, cat si numarul de jucatori maxim pentru jocul ales
+     *
+     * @param owner
+     * @param gameName
+     * @param maxNumberOfPlayers
+     */
     public GameLobby(ClientThread owner, String gameName, int maxNumberOfPlayers) {
         this.owner = owner;
         this.gameName = gameName;
@@ -93,7 +100,7 @@ public class GameLobby {
                 GameLobby.mapOfGames.put(this, new HangMan(owner));
                 break;
             }
-            case "typefast":{
+            case "typefast": {
                 GameLobby.mapOfGames.put(this, new TypeFast(owner));
                 break;
             }
@@ -115,13 +122,16 @@ public class GameLobby {
      * @return 1, daca a fost adaugat clientul; 0, daca clientul apartine deja lobby-ului; -1, daca nu mai este loc in lobby
      */
     public int addNewClient(ClientThread client) {
-        if (clients == null)
+        if (clients == null) {
             return -1;
+        }
 
-        if (clients.contains(client))
+        if (clients.contains(client)) {
             return 0;
-        if (clients.size() == maxNumberOfPlayers)
+        }
+        if (clients.size() == maxNumberOfPlayers) {
             return -1;
+        }
 
         clients.add(client);
         return 1;
@@ -133,7 +143,7 @@ public class GameLobby {
     public synchronized void startGame(ClientThread clientThread) throws IOException, InterruptedException {
         gameStarted = true;
 
-        if(GameLobby.mapOfGames.get(this) != null) {
+        if (GameLobby.mapOfGames.get(this) != null) {
             GameLobby.mapOfGames.get(this).initialize(clients);
             GameLobby.mapOfGames.get(this).startGame();
 
@@ -147,11 +157,13 @@ public class GameLobby {
      * @param clientThread Thread-ul clientului care a apelat functia.
      */
     public void waitUntilGameStarted(ClientThread clientThread) throws InterruptedException, IOException {
-        while (!gameStarted && !destroyed)
+        while (!gameStarted && !destroyed) {
             TimeUnit.SECONDS.sleep(1);
+        }
 
-        if(!destroyed)
+        if (!destroyed) {
             clientThread.sendMessageWithoutWaitingForResponse("A inceput jocul!");
+        }
     }
 
     /**
@@ -162,8 +174,9 @@ public class GameLobby {
      */
     public static GameLobby getGameLobbyByJoinCode(String joinCode) {
         for (GameLobby gameLobby : gameLobbies) {
-            if (gameLobby.getJoinCode().equals(joinCode))
+            if (gameLobby.getJoinCode().equals(joinCode)) {
                 return gameLobby;
+            }
         }
 
         return null;
@@ -177,9 +190,10 @@ public class GameLobby {
         gameLobbies.remove(this);
         mapOfGames.remove(this);
 
-        for(ClientThread clientThread : clients) {
-            if(clientThread != null)
+        for (ClientThread clientThread : clients) {
+            if (clientThread != null) {
                 clientThread.setGameLobby(null);
+            }
         }
 
         joinCode = null;

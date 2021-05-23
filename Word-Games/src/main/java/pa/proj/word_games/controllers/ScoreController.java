@@ -1,5 +1,6 @@
 package pa.proj.word_games.controllers;
 
+import pa.proj.word_games.custom_exceptions.PlayerWithoutScoreException;
 import pa.proj.word_games.models.FazanScore;
 import pa.proj.word_games.models.HangmanScore;
 import pa.proj.word_games.models.TypeFastScore;
@@ -13,6 +14,7 @@ import java.util.Map;
 public class ScoreController {
     /**
      * Preia din baza de date scorurile unui utilizator.
+     *
      * @param userId Id-ul utilizatorului.
      * @return Un map, cheia fiind numele jocului, iar valoarea fiind scorul utilizatorului la acel joc.
      */
@@ -34,12 +36,21 @@ public class ScoreController {
                         TypeFastScoreRepository.getInstance().findById(userId).getScore() :
                         0
         );
+        try{
+            if(playerScores==null){
+                throw new PlayerWithoutScoreException("Acest player nu are scoruri la jocuri");
+            }
+            return playerScores;
+        }catch(Exception exception){
+            System.out.println(exception.getMessage());
+        }
+        return null;
 
-        return playerScores;
     }
 
     /**
      * Preia din baza de date scorul din jocul TypeFast al unui utilizator.
+     *
      * @param userId Id-ul utilizatorului.
      * @return Scorul, de tipul TypeFastScore; null, daca utilizatorul nu are un scor inregistrat in baza de date pentru acest joc.
      */
@@ -48,6 +59,7 @@ public class ScoreController {
     }
 
     /**
+     *
      * @return Urmatorul id disponibil pentru un obiect de tipul TypeFastScore.
      */
     public static int getNextTypeFastScoreAvailableId() {
@@ -56,6 +68,7 @@ public class ScoreController {
 
     /**
      * Salveaza in baza de date o instanta de tipul TypeFastScore.
+     *
      * @param typeFastScore Instanta care va fi salvata.
      * @return Instanta salvata, in caz de succes; NULL, in caz de esuare
      */
@@ -65,6 +78,7 @@ public class ScoreController {
 
     /**
      * Actualizeaza un obiect de tipul TypeFastScore din baza de date (obiectul este deja salvat).
+     *
      * @param typeFastScore Obiectul salvat, cu noile date, care vor fi actualizate in baza de date.
      * @return Obiectul actualizat, in caz de succes; NULL, in caz de esuare
      */
@@ -74,14 +88,24 @@ public class ScoreController {
 
     /**
      * Preia din baza de date scorul din jocul HangMan al unui utilizator.
+     *
      * @param userId Id-ul utilizatorului.
      * @return Scorul, de tipul HangmanScore; null, daca utilizatorul nu are un scor inregistrat in baza de date pentru acest joc.
      */
     public static HangmanScore getHangmanScoreByUserId(int userId) {
-        return HangmanScoreRepository.getInstance().findById(userId);
+        try{
+            if(HangmanScoreRepository.getInstance().findById(userId)==null){
+                throw new PlayerWithoutScoreException("Acest player nu are scor la jocul Hang-Man");
+            }
+            return HangmanScoreRepository.getInstance().findById(userId);
+        }catch(Exception exception){
+            System.out.println(exception.getMessage());
+        }
+     return null;
     }
 
     /**
+     *
      * @return Urmatorul id disponibil pentru un obiect de tipul HangManScore.
      */
     public static int getNextHangmanScoreAvailableId() {
@@ -90,6 +114,7 @@ public class ScoreController {
 
     /**
      * Salveaza in baza de date o instanta de tipul HangmanScore.
+     *
      * @param hangmanScore Instanta care va fi salvata.
      * @return Instanta salvata, in caz de succes; NULL, in caz de esuare
      */
@@ -99,6 +124,7 @@ public class ScoreController {
 
     /**
      * Actualizeaza un obiect de tipul HangmanScore din baza de date (obiectul este deja salvat).
+     *
      * @param hangmanScore Obiectul salvat, cu noile date, care vor fi actualizate in baza de date.
      * @return Obiectul actualizat, in caz de succes; NULL, in caz de esuare
      */
@@ -108,14 +134,24 @@ public class ScoreController {
 
     /**
      * Preia din baza de date scorul din jocul Fazan al unui utilizator.
+     *
      * @param userId Id-ul utilizatorului.
      * @return Scorul, de tipul FazanScore; null, daca utilizatorul nu are un scor inregistrat in baza de date pentru acest joc.
      */
     public static FazanScore getFazanScoreByUserId(int userId) {
-        return FazanScoreRepository.getInstance().findById(userId);
+        try{
+            if(FazanScoreRepository.getInstance().findById(userId)==null){
+                throw new PlayerWithoutScoreException("Acest player nu are scor la jocul Fazan");
+            }
+            return FazanScoreRepository.getInstance().findById(userId);
+        }catch(Exception exception){
+            System.out.println(exception.getMessage());
+        }
+        return null;
     }
 
     /**
+     *
      * @return Urmatorul id disponibil pentru un obiect de tipul FazanScore.
      */
     public static int getNextFazanScoreAvailableId() {
@@ -124,6 +160,7 @@ public class ScoreController {
 
     /**
      * Salveaza in baza de date o instanta de tipul FazanScore.
+     *
      * @param fazanScore Instanta care va fi salvata.
      * @return Instanta salvata, in caz de succes; NULL, in caz de esuare
      */
@@ -133,6 +170,7 @@ public class ScoreController {
 
     /**
      * Actualizeaza un obiect de tipul FazanScore din baza de date (obiectul este deja salvat).
+     *
      * @param fazanScore Obiectul salvat, cu noile date, care vor fi actualizate in baza de date.
      * @return Obiectul actualizat, in caz de succes; NULL, in caz de esuare
      */

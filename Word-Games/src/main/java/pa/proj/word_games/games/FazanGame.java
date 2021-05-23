@@ -116,7 +116,7 @@ public class FazanGame implements AbstractGame {
         String previousWord = String.valueOf(generateRandomAlphabetCharacter());
         String actualWord;
         boolean forceEndGameSession = false; // Devine true cand un jucator introduce 5 cuvinte care nu respecta regulile/nu
-                                            // sunt valide/se repeta
+        // sunt valide/se repeta
 
         // Jocul
         do {
@@ -163,13 +163,13 @@ public class FazanGame implements AbstractGame {
                 sendMessageToAllClientsExceptCertainOne("Jucatorul " + clientThreads.get(playerTurnIndex).getUser().getUsername() +
                         "a introdus cuvantul \"" + actualWord + "\".", clientThreads.get(playerTurnIndex));
 
-                if(numberOfWrongWords >= 4) {
+                if (numberOfWrongWords >= 4) {
                     forceEndGameSession = true;
                     break;
                 }
             }
 
-            if(forceEndGameSession) break;
+            if (forceEndGameSession) break;
 
             usedWords.add(actualWord.toLowerCase(Locale.ROOT));
             previousWord = actualWord;
@@ -256,8 +256,9 @@ public class FazanGame implements AbstractGame {
      */
     private String sendMessageToAllClientsAndWaitResponseFromCertainClient(String message, ClientThread client) throws IOException {
         for (ClientThread clientThread : clientThreads) {
-            if (clientThread != client)
+            if (clientThread != client) {
                 clientThread.sendMessageWithoutWaitingForResponse(message);
+            }
         }
         return client.sendMessageAndWaitForResponse(message);
     }
@@ -271,8 +272,9 @@ public class FazanGame implements AbstractGame {
      */
     private void sendMessageToAllClientsExceptCertainOne(String message, ClientThread exceptedClient) throws IOException {
         for (ClientThread clientThread : clientThreads) {
-            if (clientThread != exceptedClient)
+            if (clientThread != exceptedClient) {
                 clientThread.sendMessageWithoutWaitingForResponse(message);
+            }
         }
     }
 
@@ -320,10 +322,10 @@ public class FazanGame implements AbstractGame {
         sendMessageToAllClients(clientThreads.get(startingPlayerIndex).getUser().getUsername() + " a pierdut jocul de Fazan!");
 
         // Adaug cate un punct fiecarui jucator, cu exceptia pierzatorului
-        for(int index = 0; index < clientThreads.size(); index++) {
-            if(index != startingPlayerIndex) {
+        for (int index = 0; index < clientThreads.size(); index++) {
+            if (index != startingPlayerIndex) {
                 FazanScore fazanScore = ScoreController.getFazanScoreByUserId(clientThreads.get(index).getUser().getId());
-                if(fazanScore == null) {
+                if (fazanScore == null) {
                     fazanScore = new FazanScore(
                             ScoreController.getNextFazanScoreAvailableId(), clientThreads.get(index).getUser().getId(), 0
                     );

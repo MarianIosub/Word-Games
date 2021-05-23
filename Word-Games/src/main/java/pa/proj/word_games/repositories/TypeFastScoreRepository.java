@@ -10,17 +10,19 @@ import javax.persistence.TypedQuery;
 public class TypeFastScoreRepository implements AbstractRepository<TypeFastScore> {
     private static TypeFastScoreRepository instance = null;
 
-    private TypeFastScoreRepository() { }
+    private TypeFastScoreRepository() {
+    }
 
-    public static TypeFastScoreRepository getInstance()
-    {
-        if(instance == null)
+    public static TypeFastScoreRepository getInstance() {
+        if (instance == null) {
             instance = new TypeFastScoreRepository();
+        }
         return instance;
     }
 
     /**
      * Cauta in baza de date cel mai mare id folosit la un scor pentru jocul TypeFast.
+     *
      * @return Id-ul gasit + 1; 1, daca nu este inregistrat niciun id in baza de date.
      */
     public int getNextAvailableId() {
@@ -29,22 +31,18 @@ public class TypeFastScoreRepository implements AbstractRepository<TypeFastScore
         TypedQuery<Integer> typedQuery = entityManager.createQuery(query, Integer.class);
 
         Integer id = null;
-        try
-        {
+        try {
             id = typedQuery.getSingleResult();
             entityManager.close();
-            return id+1;
-        }
-        catch(Exception ignored)
-        {
+            return id + 1;
+        } catch (Exception ignored) {
             entityManager.close();
             return 1;
         }
     }
 
     @Override
-    public TypeFastScore findById(int id)
-    {
+    public TypeFastScore findById(int id) {
         EntityManager entityManager = EntityFactoryManager.getInstance().createEntityManager();
 
         String query = "SELECT tfs FROM TypeFastScore tfs WHERE tfs.id=?1";
@@ -52,35 +50,32 @@ public class TypeFastScoreRepository implements AbstractRepository<TypeFastScore
         typedQuery.setParameter(1, id);
 
         TypeFastScore typeFastScore = null;
-        try
-        {
+        try {
             typeFastScore = typedQuery.getSingleResult();
+        } catch (Exception ignored) {
         }
-        catch(Exception ignored)
-        { }
 
         entityManager.close();
         return typeFastScore;
     }
 
     @Override
-    public TypeFastScore findByText(String text) { return null; }
+    public TypeFastScore findByText(String text) {
+        return null;
+    }
 
     @Override
     public TypeFastScore save(TypeFastScore typeFastScore) {
-        if(typeFastScore == null)
+        if (typeFastScore == null) {
             throw new NullPointerException();
-
+        }
         EntityManager entityManager = EntityFactoryManager.getInstance().createEntityManager();
         EntityTransaction entityTransaction = entityManager.getTransaction();
-        try
-        {
+        try {
             entityTransaction.begin();
             entityManager.persist(typeFastScore);
             entityTransaction.commit();
-        }
-        catch(Exception ignored)
-        {
+        } catch (Exception ignored) {
             entityManager.close();
             return null;
         }
@@ -91,9 +86,9 @@ public class TypeFastScoreRepository implements AbstractRepository<TypeFastScore
 
     @Override
     public TypeFastScore update(TypeFastScore newTypeFastScore) {
-        if(newTypeFastScore == null)
+        if (newTypeFastScore == null) {
             throw new NullPointerException();
-
+        }
         String query = "SELECT tfs FROM TypeFastScore tfs WHERE tfs.id=?1";
 
         EntityManager entityManager = EntityFactoryManager.getInstance().createEntityManager();
@@ -103,15 +98,12 @@ public class TypeFastScoreRepository implements AbstractRepository<TypeFastScore
         typedQuery.setParameter(1, newTypeFastScore.getId());
 
         TypeFastScore typeFastScore = null;
-        try
-        {
+        try {
             entityTransaction.begin();
             typeFastScore = typedQuery.getSingleResult();
             typeFastScore.setScore(newTypeFastScore.getScore());
             entityTransaction.commit();
-        }
-        catch(Exception ignored)
-        {
+        } catch (Exception ignored) {
             entityManager.close();
             return null;
         }

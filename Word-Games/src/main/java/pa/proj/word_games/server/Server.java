@@ -15,12 +15,13 @@ public class Server {
 
     private List<ClientThread> clientThreads;
 
-    private Server() { }
+    private Server() {
+    }
 
     public static Server getInstance() {
-        if (instance == null)
+        if (instance == null) {
             instance = new Server();
-
+        }
         return instance;
     }
 
@@ -31,11 +32,12 @@ public class Server {
 
     /**
      * Primeste cereri de conexiuni de la potentiali clienti. Pentru fiecare client acceptat, se creeaza un thread.
+     *
      * @throws IOException
      */
     public void start() throws IOException {
         ClientThread clientThread;
-        while(true) {
+        while (true) {
             System.out.println("Astept un client...");
             Socket socket = serverSocket.accept();
             System.out.println("S-a conectat un client...");
@@ -49,10 +51,12 @@ public class Server {
 
     /**
      * Inchide socket-ul server-ului.
+     *
      * @throws IOException
      */
     public void closeServerSocket() throws IOException {
-        if(!serverSocket.isClosed())
+        if (!serverSocket.isClosed()) {
             serverSocket.close();
+        }
     }
 }

@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 public class TypeFast implements AbstractGame {
     private long startTime;
@@ -18,10 +19,20 @@ public class TypeFast implements AbstractGame {
     private int correctWords;
     private int badWords;
 
+    /**
+     * Atribuie jocului Type-fast un player prin un client-thread
+     *
+     * @param clientThread - player-ul caruia i se atribuie jocul
+     */
     public TypeFast(ClientThread clientThread) {
         this.clientThread = clientThread;
     }
 
+    /**
+     * Prezinta regulile jocului player-ului atribuit
+     *
+     * @throws IOException
+     */
     private void Welcome() throws IOException {
         clientThread.sendMessageWithoutWaitingForResponse("Salut " + clientThread.getUser().getUsername() + " si bine ai venit la \"Fast typing words!\"!");
         clientThread.sendMessageWithoutWaitingForResponse("Scopul acestui joc este de a vedea cat de rapid poti sa scrii!");
@@ -29,11 +40,21 @@ public class TypeFast implements AbstractGame {
         clientThread.sendMessageWithoutWaitingForResponse("                INTR-UN SINGUR MINUT                ");
     }
 
+    /**
+     * Calculeaza timpul in secunde a jocului curent
+     *
+     * @return cat timp a trecut de la inceputul jocului
+     */
     private long timeElapsed() {
         long elapsedTime = System.currentTimeMillis() - startTime;
         return elapsedTime / 1000;
     }
 
+    /**
+     * Extrage un numar de cuvinte pe care le atribuie jocului
+     *
+     * @throws IOException
+     */
     private void extractWords() throws IOException {
 
         for (int index = 0; index < 30; index++) {
@@ -48,13 +69,20 @@ public class TypeFast implements AbstractGame {
         }
     }
 
+    /**
+     * Pentru fiecare cuvant curent, arata jucatorului cuvintele in ordinea in care trebuie sa le scrie
+     * Pentru un cuvant introdus corect, incrementeaza numarul de cuvinte pana la un moment dat, iar pentru unul gresit, numarul de cuvinte gresite
+     * Dupa fiecare cuvant introdus, elimina cuvantul curent din lista de cuvinte, pentru ca focus-ul playerului sa fie unul mai usor
+     *
+     * @throws IOException
+     */
     private void checkWord() throws IOException {
         clientThread.sendMessageWithoutWaitingForResponse("Cuvintele care trebuie scrise sunt: ");
-        StringBuilder stringBuilder = new StringBuilder();
-        for (Word word : words) {
-            stringBuilder.append(word.getText()).append(", ");
-        }
-        clientThread.sendMessageWithoutWaitingForResponse(stringBuilder.toString());
+        //STREAMS
+        //STREAMS
+        //STREAMS
+        String stringBuilder = words.stream().map(word -> word.getText() + ", ").collect(Collectors.joining());
+        clientThread.sendMessageWithoutWaitingForResponse(stringBuilder);
         if(timeElapsed() >= 60) return;
 
         Word wordRead = new Word();
@@ -70,6 +98,12 @@ public class TypeFast implements AbstractGame {
         words.remove(0);
     }
 
+    /**
+     * Prezinta jucatorului statisticle finale, dupa numarul de cuvinte corecte si gresite
+     * Daca acesta are in un minut mai multe corecte decat gresite, i se adauga un punct la recordul sau din abaza de date
+     *
+     * @throws IOException
+     */
     public void end() throws IOException {
         long elapsedSeconds = timeElapsed();
 
@@ -108,6 +142,11 @@ public class TypeFast implements AbstractGame {
         }
     }
 
+    /**
+     * Jocul propriu-zis, care dureaza 60 de secunde, + daca ultimul cuvant incepe sa il scrie inainte de secunda 60
+     *
+     * @throws IOException
+     */
     public void typeFastGame() throws IOException {
         extractWords();
         Welcome();
@@ -119,11 +158,21 @@ public class TypeFast implements AbstractGame {
         end();
     }
 
+    /**
+     * Porneste jocul in retea pentru player-ului atribuit jocului
+     *
+     * @throws IOException
+     */
     @Override
     public void startGame() throws IOException {
         typeFastGame();
     }
 
+    /**
+     * Seteaza timpul de start pentru a calcula dupam fiecare cuvantul introdus timpul scurs
+     *
+     * @param startTime - timpul cand a inceput jocului
+     */
     public void setStartTime(long startTime) {
         this.startTime = startTime;
     }

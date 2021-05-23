@@ -11,37 +11,35 @@ import javax.persistence.TypedQuery;
 /**
  * Repository pentru clasa "Word" (respectiv, tabela "words").
  */
-public class WordRepository implements AbstractRepository<Word>
-{
+public class WordRepository implements AbstractRepository<Word> {
     private static WordRepository instance = null;
 
-    private WordRepository() { }
+    private WordRepository() {
+    }
 
-    public static WordRepository getInstance()
-    {
-        if(instance == null)
+    public static WordRepository getInstance() {
+        if (instance == null) {
             instance = new WordRepository();
+        }
         return instance;
     }
 
     /**
      * Calculeaza numarul de intrari din tabela "words" (numarul de randuri).
+     *
      * @return Numarul de randuri din tabela "words".
      */
-    public Long getNumberOfEntries()
-    {
+    public Long getNumberOfEntries() {
         EntityManager entityManager = EntityFactoryManager.getInstance().createEntityManager();
 
         String query = "SELECT COUNT(w) FROM Word w";
         TypedQuery<Long> typedQuery = entityManager.createQuery(query, Long.class);
 
         Long numberOfEntries = 0L;
-        try
-        {
+        try {
             numberOfEntries = typedQuery.getSingleResult();
+        } catch (Exception ignored) {
         }
-        catch(Exception ignored)
-        { }
 
         entityManager.close();
         return numberOfEntries;
@@ -49,35 +47,30 @@ public class WordRepository implements AbstractRepository<Word>
 
     /**
      * Cauta in baza de date cuvinte care incep cu un anumit pattern.
+     *
      * @param pattern Pattern-ul.
      * @return 1, daca exista cel putin un cuvant; 0, altfel
      */
-    public Integer findByStartPattern(String pattern)
-    {
+    public Integer findByStartPattern(String pattern) {
         EntityManager entityManager = EntityFactoryManager.getInstance().createEntityManager();
 
         String query = "SELECT 1 FROM Word w WHERE SUBSTR(w.text, 1, 2) = ?1";
         TypedQuery<Integer> typedQuery = entityManager.createQuery(query, Integer.class);
-        typedQuery.setParameter(1,  pattern);
+        typedQuery.setParameter(1, pattern);
 
         Integer result = 0;
-        try
-        {
+        try {
             result = typedQuery.getSingleResult();
+        } catch (Exception ignored) {
         }
-        catch(Exception ignored)
-        { }
 
         // Caut si fara diacritici
-        if(result == 0)
-        {
-            typedQuery.setParameter(1,  WordController.stringWithoutDiacritics(pattern) + "%");
-            try
-            {
+        if (result == 0) {
+            typedQuery.setParameter(1, WordController.stringWithoutDiacritics(pattern) + "%");
+            try {
                 result = typedQuery.getSingleResult();
+            } catch (Exception ignored) {
             }
-            catch(Exception ignored)
-            { }
         }
 
         entityManager.close();
@@ -85,8 +78,7 @@ public class WordRepository implements AbstractRepository<Word>
     }
 
     @Override
-    public Word findById(int id)
-    {
+    public Word findById(int id) {
         EntityManager entityManager = EntityFactoryManager.getInstance().createEntityManager();
 
         String query = "SELECT w FROM Word w WHERE w.id=?1";
@@ -94,20 +86,17 @@ public class WordRepository implements AbstractRepository<Word>
         typedQuery.setParameter(1, id);
 
         Word word = null;
-        try
-        {
+        try {
             word = typedQuery.getSingleResult();
+        } catch (Exception ignored) {
         }
-        catch(Exception ignored)
-        { }
 
         entityManager.close();
         return word;
     }
 
     @Override
-    public Word findByText(String text)
-    {
+    public Word findByText(String text) {
         EntityManager entityManager = EntityFactoryManager.getInstance().createEntityManager();
 
         String query = "SELECT w FROM Word w WHERE w.text=?1";
@@ -115,23 +104,18 @@ public class WordRepository implements AbstractRepository<Word>
         typedQuery.setParameter(1, text);
 
         Word word = null;
-        try
-        {
+        try {
             word = typedQuery.getSingleResult();
+        } catch (Exception ignored) {
         }
-        catch(Exception ignored)
-        { }
 
         // Caut fara diacritici
-        if(word == null)
-        {
+        if (word == null) {
             typedQuery.setParameter(1, WordController.stringWithoutDiacritics(text));
-            try
-            {
+            try {
                 word = typedQuery.getSingleResult();
+            } catch (Exception ignored) {
             }
-            catch(Exception ignored)
-            { }
         }
 
         entityManager.close();
@@ -139,21 +123,17 @@ public class WordRepository implements AbstractRepository<Word>
     }
 
     @Override
-    public Word save(Word word)
-    {
-        if(word == null)
+    public Word save(Word word) {
+        if (word == null) {
             throw new NullPointerException();
-
+        }
         EntityManager entityManager = EntityFactoryManager.getInstance().createEntityManager();
         EntityTransaction entityTransaction = entityManager.getTransaction();
-        try
-        {
+        try {
             entityTransaction.begin();
             entityManager.persist(word);
             entityTransaction.commit();
-        }
-        catch(Exception ignored)
-        {
+        } catch (Exception ignored) {
             entityManager.close();
             return null;
         }
@@ -164,7 +144,7 @@ public class WordRepository implements AbstractRepository<Word>
 
     @Override
     public Word update(Word newWord) {
-        if(newWord == null)
+        if (newWord == null)
             throw new NullPointerException();
 
         String query = "SELECT w FROM Word w WHERE w.id=?1";
@@ -176,15 +156,12 @@ public class WordRepository implements AbstractRepository<Word>
         typedQuery.setParameter(1, newWord.getId());
 
         Word word = null;
-        try
-        {
+        try {
             entityTransaction.begin();
             word = typedQuery.getSingleResult();
             word.setText(newWord.getText());
             entityTransaction.commit();
-        }
-        catch(Exception ignored)
-        {
+        } catch (Exception ignored) {
             entityManager.close();
             return null;
         }

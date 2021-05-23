@@ -10,17 +10,19 @@ import javax.persistence.TypedQuery;
 public class UserRepository implements AbstractRepository<User> {
     private static UserRepository instance = null;
 
-    private UserRepository() { }
+    private UserRepository() {
+    }
 
-    public static UserRepository getInstance()
-    {
-        if(instance == null)
+    public static UserRepository getInstance() {
+        if (instance == null) {
             instance = new UserRepository();
+        }
         return instance;
     }
 
     /**
      * Cauta in baza de date un utilizator dupa datele de conectare oferite de client.
+     *
      * @param username Numele de utilizator oferit.
      * @param password Parola oferita.
      * @return User-ul, daca exista unul cu aceste date; NULL, altfel
@@ -34,12 +36,10 @@ public class UserRepository implements AbstractRepository<User> {
         typedQuery.setParameter(2, password);
 
         User user = null;
-        try
-        {
+        try {
             user = typedQuery.getSingleResult();
+        } catch (Exception ignored) {
         }
-        catch(Exception ignored)
-        { }
 
         entityManager.close();
         return user;
@@ -47,6 +47,7 @@ public class UserRepository implements AbstractRepository<User> {
 
     /**
      * Cauta in baza de date un User dupa un anumit username.
+     *
      * @param username Username-ul dupa care se face cautarea.
      * @return true, daca exista un User cu acest username; false, altfel
      */
@@ -57,14 +58,11 @@ public class UserRepository implements AbstractRepository<User> {
         TypedQuery<User> typedQuery = entityManager.createQuery(query, User.class);
         typedQuery.setParameter(1, username);
 
-        try
-        {
+        try {
             typedQuery.getSingleResult();
             entityManager.close();
             return true;
-        }
-        catch(Exception ignored)
-        {
+        } catch (Exception ignored) {
             entityManager.close();
             return false;
         }
@@ -79,22 +77,18 @@ public class UserRepository implements AbstractRepository<User> {
         TypedQuery<Integer> typedQuery = entityManager.createQuery(query, Integer.class);
 
         Integer id = null;
-        try
-        {
+        try {
             id = typedQuery.getSingleResult();
             entityManager.close();
-            return id+1;
-        }
-        catch(Exception ignored)
-        {
+            return id + 1;
+        } catch (Exception ignored) {
             entityManager.close();
             return 1;
         }
     }
 
     @Override
-    public User findById(int id)
-    {
+    public User findById(int id) {
         EntityManager entityManager = EntityFactoryManager.getInstance().createEntityManager();
 
         String query = "SELECT u FROM User u WHERE u.id=?1";
@@ -102,35 +96,32 @@ public class UserRepository implements AbstractRepository<User> {
         typedQuery.setParameter(1, id);
 
         User user = null;
-        try
-        {
+        try {
             user = typedQuery.getSingleResult();
+        } catch (Exception ignored) {
         }
-        catch(Exception ignored)
-        { }
 
         entityManager.close();
         return user;
     }
 
     @Override
-    public User findByText(String text) { return null; }
+    public User findByText(String text) {
+        return null;
+    }
 
     @Override
     public User save(User user) {
-        if(user == null)
+        if (user == null) {
             throw new NullPointerException();
-
+        }
         EntityManager entityManager = EntityFactoryManager.getInstance().createEntityManager();
         EntityTransaction entityTransaction = entityManager.getTransaction();
-        try
-        {
+        try {
             entityTransaction.begin();
             entityManager.persist(user);
             entityTransaction.commit();
-        }
-        catch(Exception ignored)
-        {
+        } catch (Exception ignored) {
             entityManager.close();
             return null;
         }
@@ -141,9 +132,9 @@ public class UserRepository implements AbstractRepository<User> {
 
     @Override
     public User update(User newUser) {
-        if(newUser == null)
+        if (newUser == null) {
             throw new NullPointerException();
-
+        }
         String query = "SELECT u FROM User u WHERE u.id=?1";
 
         EntityManager entityManager = EntityFactoryManager.getInstance().createEntityManager();
@@ -153,16 +144,13 @@ public class UserRepository implements AbstractRepository<User> {
         typedQuery.setParameter(1, newUser.getId());
 
         User user = null;
-        try
-        {
+        try {
             entityTransaction.begin();
             user = typedQuery.getSingleResult();
             user.setUsername(newUser.getUsername());
             user.setPassword(newUser.getPassword());
             entityTransaction.commit();
-        }
-        catch(Exception ignored)
-        {
+        } catch (Exception ignored) {
             entityManager.close();
             return null;
         }

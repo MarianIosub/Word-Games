@@ -10,12 +10,13 @@ import javax.persistence.TypedQuery;
 public class FazanScoreRepository implements AbstractRepository<FazanScore> {
     private static FazanScoreRepository instance = null;
 
-    private FazanScoreRepository() { }
+    private FazanScoreRepository() {
+    }
 
-    public static FazanScoreRepository getInstance()
-    {
-        if(instance == null)
+    public static FazanScoreRepository getInstance() {
+        if (instance == null) {
             instance = new FazanScoreRepository();
+        }
         return instance;
     }
 
@@ -28,22 +29,18 @@ public class FazanScoreRepository implements AbstractRepository<FazanScore> {
         TypedQuery<Integer> typedQuery = entityManager.createQuery(query, Integer.class);
 
         Integer id = null;
-        try
-        {
+        try {
             id = typedQuery.getSingleResult();
             entityManager.close();
-            return id+1;
-        }
-        catch(Exception ignored)
-        {
+            return id + 1;
+        } catch (Exception ignored) {
             entityManager.close();
             return 1;
         }
     }
 
     @Override
-    public FazanScore findById(int id)
-    {
+    public FazanScore findById(int id) {
         EntityManager entityManager = EntityFactoryManager.getInstance().createEntityManager();
 
         String query = "SELECT fs FROM FazanScore fs WHERE fs.id=?1";
@@ -51,35 +48,33 @@ public class FazanScoreRepository implements AbstractRepository<FazanScore> {
         typedQuery.setParameter(1, id);
 
         FazanScore fazanScore = null;
-        try
-        {
+        try {
             fazanScore = typedQuery.getSingleResult();
+        } catch (Exception ignored) {
         }
-        catch(Exception ignored)
-        { }
 
         entityManager.close();
         return fazanScore;
     }
 
     @Override
-    public FazanScore findByText(String text) { return null; }
+    public FazanScore findByText(String text) {
+        return null;
+    }
 
     @Override
     public FazanScore save(FazanScore fazanScore) {
-        if(fazanScore == null)
+        if (fazanScore == null) {
             throw new NullPointerException();
+        }
 
         EntityManager entityManager = EntityFactoryManager.getInstance().createEntityManager();
         EntityTransaction entityTransaction = entityManager.getTransaction();
-        try
-        {
+        try {
             entityTransaction.begin();
             entityManager.persist(fazanScore);
             entityTransaction.commit();
-        }
-        catch(Exception ignored)
-        {
+        } catch (Exception ignored) {
             entityManager.close();
             return null;
         }
@@ -90,9 +85,9 @@ public class FazanScoreRepository implements AbstractRepository<FazanScore> {
 
     @Override
     public FazanScore update(FazanScore newFazanScore) {
-        if(newFazanScore == null)
+        if (newFazanScore == null) {
             throw new NullPointerException();
-
+        }
         String query = "SELECT fs FROM FazanScore fs WHERE fs.id=?1";
 
         EntityManager entityManager = EntityFactoryManager.getInstance().createEntityManager();
@@ -102,15 +97,12 @@ public class FazanScoreRepository implements AbstractRepository<FazanScore> {
         typedQuery.setParameter(1, newFazanScore.getId());
 
         FazanScore fazanScore = null;
-        try
-        {
+        try {
             entityTransaction.begin();
             fazanScore = typedQuery.getSingleResult();
             fazanScore.setScore(newFazanScore.getScore());
             entityTransaction.commit();
-        }
-        catch(Exception ignored)
-        {
+        } catch (Exception ignored) {
             entityManager.close();
             return null;
         }
