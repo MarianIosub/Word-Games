@@ -4,19 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1e2015fb-b56c-4b1c-9b88-868a3309d2c5" name="Default Changelist" comment="" />
-    <list id="0c3609e9-6f5b-4102-a0a1-15a6b2c0d2a1" name="Changes by Marian" comment="" />
+    <list default="true" id="1e2015fb-b56c-4b1c-9b88-868a3309d2c5" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../Word-Games/src/main/java/pa/proj/word_games/games/TypeFast.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Word-Games/src/main/java/pa/proj/word_games/games/TypeFast.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
-  </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="Class" />
-      </list>
-    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -47,7 +41,6 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="codeWithMe.voiceChat.enabledByDefault" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../Word-Games" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.15" />
