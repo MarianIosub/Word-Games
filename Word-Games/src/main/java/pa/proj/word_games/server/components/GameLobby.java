@@ -162,7 +162,12 @@ public class GameLobby {
         }
 
         if (!destroyed) {
+            clientThread.sendMessageWithoutWaitingForResponse(" ");
             clientThread.sendMessageWithoutWaitingForResponse("A inceput jocul!");
+        }
+        else {
+            clientThread.sendMessageWithoutWaitingForResponse(" ");
+            clientThread.sendMessageWithoutWaitingForResponse("Camera a fost inchisa!");
         }
     }
 
@@ -193,6 +198,7 @@ public class GameLobby {
         for (ClientThread clientThread : clients) {
             if (clientThread != null) {
                 clientThread.setGameLobby(null);
+                clientThread.sendMessageWithoutWaitingForResponse("Ai fost dat afara din camera!");
             }
         }
 
@@ -201,5 +207,13 @@ public class GameLobby {
         owner = null;
         gameStarted = false;
         destroyed = true;
+    }
+
+    /**
+     * Sterge un anumit jucator din lista de clienti.
+     * @param client Clientul care va fi sters.
+     */
+    public void removeClient(ClientThread client) {
+        clients.remove(client);
     }
 }

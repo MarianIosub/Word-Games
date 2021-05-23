@@ -39,38 +39,48 @@ public class ClientThread extends Thread {
         String joinCode;
 
         while(true) {
+            sendMessageWithoutWaitingForResponse(" ");
             sendMessageWithoutWaitingForResponse("Alegeti o actiune:");
-            sendMessageWithoutWaitingForResponse("\t1 - Join Lobby");
-            sendMessageWithoutWaitingForResponse("\t2 - Create Lobby");
-            sendMessageWithoutWaitingForResponse("\t3 - Start Game");
-            sendMessageWithoutWaitingForResponse("\t4 - Inchide lobby-ul (daca esti creatorul acestuia)");
+            sendMessageWithoutWaitingForResponse("\t1 - Intra intr-o camera");
+            sendMessageWithoutWaitingForResponse("\t2 - Creeaza o camera");
+            sendMessageWithoutWaitingForResponse("\t3 - Incepe jocul");
+            sendMessageWithoutWaitingForResponse("\t4 - Inchide camera (daca esti creatorul acestuia)");
             sendMessageWithoutWaitingForResponse("\t5 - Vreau sa-mi vad punctajele");
-            response = sendMessageAndWaitForResponse("\t0 - Exit");
+            response = sendMessageAndWaitForResponse("\t0 - Inchide");
 
             if(response.equals("0")){ // Exit
+                sendMessageWithoutWaitingForResponse(" ");
                 sendMessageWithoutWaitingForResponse("La revedere!");
                 break;
             }
 
             switch(response) {
                 case "1" : { // Join Lobby
-                    joinCode = sendMessageAndWaitForResponse("Introduceti codul lobby-ului:");
+                    sendMessageWithoutWaitingForResponse(" ");
+                    joinCode = sendMessageAndWaitForResponse("Introduceti codul de conectare:");
                     gameLobbyObj = GameLobby.getGameLobbyByJoinCode(joinCode);
 
-                    if(gameLobbyObj == null)
-                        sendMessageWithoutWaitingForResponse("Nu exista un lobby cu acest cod.");
+                    if(gameLobbyObj == null) {
+                        sendMessageWithoutWaitingForResponse(" ");
+                        sendMessageWithoutWaitingForResponse("Nu exista o camera cu acest cod de conectare.");
+                    }
                     else {
                         int answerCode = gameLobbyObj.addNewClient(this);
                         switch(answerCode) {
                             case -1: {
-                                sendMessageWithoutWaitingForResponse("Nu mai este loc in acest lobby.");
+                                sendMessageWithoutWaitingForResponse(" ");
+                                sendMessageWithoutWaitingForResponse("Nu mai este loc in aceasta camera.");
                                 break;
                             }
                             case 1: {
-                                sendMessageWithoutWaitingForResponse("Ai intrat in lobby.");
+                                sendMessageWithoutWaitingForResponse(" ");
+                                sendMessageWithoutWaitingForResponse("Ai intrat in camera.");
 
-                                if(this.gameLobby != null)
-                                    gameLobby.destroyLobby();
+                                if(this.gameLobby != null) {
+                                    if (this.gameLobby.getOwner() == this) {
+                                        gameLobby.destroyLobby();
+                                    }
+                                }
                                 this.gameLobby = gameLobbyObj;
 
                                 gameLobby.waitUntilGameStarted(this);
@@ -80,7 +90,8 @@ public class ClientThread extends Thread {
                                 break;
                             }
                             case 0: {
-                                sendMessageWithoutWaitingForResponse("Esti deja in acest lobby.");
+                                sendMessageWithoutWaitingForResponse(" ");
+                                sendMessageWithoutWaitingForResponse("Esti deja in aceasta camera.");
                                 break;
                             }
                         }
@@ -94,14 +105,16 @@ public class ClientThread extends Thread {
                 case "2" : { // Create lobby
                     String gameName;
                     while(true) {
-                        sendMessageWithoutWaitingForResponse("Ce se va juca in acest lobby?");
+                        sendMessageWithoutWaitingForResponse(" ");
+                        sendMessageWithoutWaitingForResponse("Ce se va juca in acesta camera?");
                         sendMessageWithoutWaitingForResponse("\t1 - Fazan");
                         sendMessageWithoutWaitingForResponse("\t2 - Type Fast");
-                        gameName = sendMessageAndWaitForResponse("\t3 - HangMan");
+                        gameName = sendMessageAndWaitForResponse("\t3 - Spanzuratoarea");
 
                         if(gameName.equals("1") || gameName.equals("2") || gameName.equals("3"))
                             break;
 
+                        sendMessageWithoutWaitingForResponse(" ");
                         sendMessageWithoutWaitingForResponse("Raspuns invalid!");
                     }
 
@@ -109,16 +122,20 @@ public class ClientThread extends Thread {
                         case "1":
                             String maxNumberOfPlayers;
                             while (true) {
-                                maxNumberOfPlayers = sendMessageAndWaitForResponse("Cati jucatori pot fi in acest lobby?");
+                                sendMessageWithoutWaitingForResponse(" ");
+                                maxNumberOfPlayers = sendMessageAndWaitForResponse("Cati jucatori pot fi in aceasta camera?");
 
                                 try {
                                     int temp = Integer.parseInt(maxNumberOfPlayers);
 
-                                    if (temp < 2)
+                                    if (temp < 2) {
+                                        sendMessageWithoutWaitingForResponse(" ");
                                         sendMessageWithoutWaitingForResponse("Numarul minim de jucatori este 2!");
+                                    }
                                     else
                                         break;
                                 } catch (Exception exception) {
+                                    sendMessageWithoutWaitingForResponse(" ");
                                     sendMessageWithoutWaitingForResponse("Raspuns invalid!");
                                 }
                             }
@@ -133,6 +150,7 @@ public class ClientThread extends Thread {
                             break;
                     }
 
+                    sendMessageWithoutWaitingForResponse(" ");
                     sendMessageWithoutWaitingForResponse("Codul de conectare este: " + gameLobbyObj.getJoinCode());
 
                     if(this.gameLobby != null)
@@ -143,7 +161,8 @@ public class ClientThread extends Thread {
 
                 case "3" : { // Start Game
                     if(this.gameLobby == null) {
-                        sendMessageWithoutWaitingForResponse("Nu esti in niciun lobby.");
+                        sendMessageWithoutWaitingForResponse(" ");
+                        sendMessageWithoutWaitingForResponse("Nu esti in nicio camera.");
                         continue;
                     }
 
@@ -153,12 +172,14 @@ public class ClientThread extends Thread {
 
                 case "4" : { // Inchide lobby-ul (daca esti creatorul acestuia)
                     if(this.gameLobby == null) {
-                        sendMessageWithoutWaitingForResponse("Nu esti in niciun lobby.");
+                        sendMessageWithoutWaitingForResponse(" ");
+                        sendMessageWithoutWaitingForResponse("Nu esti in nicio camera.");
                         continue;
                     }
 
                     if(this.gameLobby.getOwner() != this) {
-                        sendMessageWithoutWaitingForResponse("Nu esti creatorul lobby-ului in care esti conectat.");
+                        sendMessageWithoutWaitingForResponse(" ");
+                        sendMessageWithoutWaitingForResponse("Nu esti creatorul camerei in care esti conectat.");
                         continue;
                     }
 
@@ -168,6 +189,7 @@ public class ClientThread extends Thread {
 
                 case "5" : { // Vreau sa-mi vad punctajele
                     Map<String, Integer> playerScores = ScoreController.getScoresByUserId(user.getId());
+                    sendMessageWithoutWaitingForResponse(" ");
                     sendMessageWithoutWaitingForResponse("Punctajele tale sunt: ");
                     sendMessageWithoutWaitingForResponse("\tFazan -> " + playerScores.get("fazan"));
                     sendMessageWithoutWaitingForResponse("\tSpanzuratoarea -> " + playerScores.get("hangman"));
@@ -176,6 +198,7 @@ public class ClientThread extends Thread {
                 }
 
                 default: {
+                    sendMessageWithoutWaitingForResponse(" ");
                     sendMessageWithoutWaitingForResponse("Raspuns invalid!");
                     break;
                 }
@@ -214,54 +237,63 @@ public class ClientThread extends Thread {
         try {
             String response;
             while(user == null) {
+                sendMessageWithoutWaitingForResponse(" ");
                 sendMessageWithoutWaitingForResponse("Alegeti o actiune:");
-                sendMessageWithoutWaitingForResponse("\t1 - Login");
-                sendMessageWithoutWaitingForResponse("\t2 - Register");
-                response = sendMessageAndWaitForResponse("\t0 - Exit");
+                sendMessageWithoutWaitingForResponse("\t1 - Autentificare");
+                sendMessageWithoutWaitingForResponse("\t2 - Inregistrare");
+                response = sendMessageAndWaitForResponse("\t0 - Inchide");
 
                 if(response.equals("0")) { // Exit
+
                     sendMessageWithoutWaitingForResponse("La revedere!");
                     break;
                 }
 
                 switch(response) {
                     case "1": { // Login
+                        sendMessageWithoutWaitingForResponse(" ");
                         sendMessageWithoutWaitingForResponse("Autentifica-te");
 
                         String username, password;
-                        username = sendMessageAndWaitForResponse("Introduceti username-ul");
+                        username = sendMessageAndWaitForResponse("Introduceti numele de utilizator");
                         password = sendMessageAndWaitForResponse("Introduceti parola");
 
                         user = UserController.getUserByCredentials(username, password);
                         if(user != null) {
+                            sendMessageWithoutWaitingForResponse(" ");
                             sendMessageWithoutWaitingForResponse("Te-ai autentificat cu succes!");
                         }
                         else {
-                            sendMessageWithoutWaitingForResponse("Username sau parola gresita!");
+                            sendMessageWithoutWaitingForResponse(" ");
+                            sendMessageWithoutWaitingForResponse("Numele de utilizator sau parola gresita!");
                         }
                         break;
                     }
 
                     case "2": { // Register
+                        sendMessageWithoutWaitingForResponse(" ");
                         sendMessageWithoutWaitingForResponse("Creeaza un cont");
 
                         String username, password;
-                        username = sendMessageAndWaitForResponse("Introduceti username-ul");
+                        username = sendMessageAndWaitForResponse("Introduceti numele de utilizator");
                         password = sendMessageAndWaitForResponse("Introduceti parola");
 
                         int returnedCode = UserController.registerUser(username, password);
                         switch(returnedCode) {
                             case -1: {
+                                sendMessageWithoutWaitingForResponse(" ");
                                 sendMessageWithoutWaitingForResponse("Atat numele de utilizator, cat si parola trebuie sa contina cel putin 5 caractere!");
                                 break;
                             }
 
                             case 0: {
+                                sendMessageWithoutWaitingForResponse(" ");
                                 sendMessageWithoutWaitingForResponse("Numele de utilizator este deja folosit!");
                                 break;
                             }
 
                             case 1: {
+                                sendMessageWithoutWaitingForResponse(" ");
                                 sendMessageWithoutWaitingForResponse("Contul a fost creat cu succes!");
                                 break;
                             }
@@ -270,6 +302,7 @@ public class ClientThread extends Thread {
                     }
 
                     default: {
+                        sendMessageWithoutWaitingForResponse(" ");
                         sendMessageWithoutWaitingForResponse("Raspuns invalid!");
                         break;
                     }
@@ -280,6 +313,9 @@ public class ClientThread extends Thread {
         }
         catch(SocketException socketException) {
             System.out.println("Client deconectat...");
+            if(gameLobby != null) {
+                gameLobby.removeClient(this);
+            }
         }
         catch(Exception exception) {
             System.out.println("Exceptie la ClientThread:");
