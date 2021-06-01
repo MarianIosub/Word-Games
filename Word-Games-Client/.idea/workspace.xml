@@ -7,19 +7,11 @@
     <list default="true" id="1e2015fb-b56c-4b1c-9b88-868a3309d2c5" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Word-Games-Client/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Word-Games-Client/Main.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Word-Games/target/classes/pa/proj/word_games/controllers/ScoreController.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Word-Games/target/classes/pa/proj/word_games/controllers/ScoreController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Word-Games/target/classes/pa/proj/word_games/controllers/UserController.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Word-Games/target/classes/pa/proj/word_games/controllers/UserController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Word-Games/target/classes/pa/proj/word_games/controllers/WordController.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Word-Games/target/classes/pa/proj/word_games/controllers/WordController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pa/proj/word_games_client/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/pa/proj/word_games_client/Client.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Word-Games/target/classes/pa/proj/word_games/games/FazanGame.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Word-Games/target/classes/pa/proj/word_games/games/FazanGame.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Word-Games/target/classes/pa/proj/word_games/games/HangMan.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Word-Games/target/classes/pa/proj/word_games/games/HangMan.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Word-Games/target/classes/pa/proj/word_games/games/TypeFast.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Word-Games/target/classes/pa/proj/word_games/games/TypeFast.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Word-Games/target/classes/pa/proj/word_games/managers/EntityFactoryManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Word-Games/target/classes/pa/proj/word_games/managers/EntityFactoryManager.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Word-Games/target/classes/pa/proj/word_games/managers/RepositoryManager.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Word-Games/target/classes/pa/proj/word_games/repositories/FazanScoreRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Word-Games/target/classes/pa/proj/word_games/repositories/FazanScoreRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Word-Games/target/classes/pa/proj/word_games/repositories/HangmanScoreRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Word-Games/target/classes/pa/proj/word_games/repositories/HangmanScoreRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Word-Games/target/classes/pa/proj/word_games/repositories/TypeFastScoreRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Word-Games/target/classes/pa/proj/word_games/repositories/TypeFastScoreRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Word-Games/target/classes/pa/proj/word_games/repositories/UserRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Word-Games/target/classes/pa/proj/word_games/repositories/UserRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Word-Games/target/classes/pa/proj/word_games/repositories/WordRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Word-Games/target/classes/pa/proj/word_games/repositories/WordRepository.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Word-Games/target/classes/pa/proj/word_games/server/Server.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Word-Games/target/classes/pa/proj/word_games/server/Server.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Word-Games/target/classes/pa/proj/word_games/server/components/GameLobby.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Word-Games/target/classes/pa/proj/word_games/server/components/GameLobby.class" afterDir="false" />
     </list>
@@ -63,7 +55,7 @@
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="reference.settings.ide.settings.notifications" />
   </component>
-  <component name="RunManager" selected="Application.Client2">
+  <component name="RunManager" selected="Application.Main">
     <configuration name="Client2" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="Word-Games-Client" />
@@ -104,6 +96,7 @@
       <workItem from="1621339306194" duration="359000" />
       <workItem from="1621775237464" duration="87000" />
       <workItem from="1621975567086" duration="58000" />
+      <workItem from="1622538378023" duration="1398000" />
     </task>
     <servers />
   </component>

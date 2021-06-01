@@ -1,14 +1,16 @@
 import pa.proj.word_games_client.Client;
 
+import java.io.IOException;
 import java.net.SocketException;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 public class Main {
     public static void main(String[] args) {
+        Client client = null;
         try {
-            Client client = new Client();
 
+            client=new Client();
             Scanner scanner = new Scanner(System.in);
             String message;
             int serverWaitsForResponse;
@@ -46,6 +48,15 @@ public class Main {
         }
         catch (Exception exception) {
             exception.printStackTrace();
+        }
+        finally{
+            if(client!=null){
+                try {
+                    client.closeSocket();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 }
