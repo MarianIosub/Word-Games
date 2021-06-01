@@ -31,6 +31,7 @@ public class HangMan implements AbstractGame {
      * @throws IOException
      */
     public  void gameLevel() throws IOException {
+        clientThread.sendMessageWithoutWaitingForResponse(" ");
         String level = clientThread.sendMessageAndWaitForResponse("Alege nivelul de joc pe care il doresti: Usor, Mediu, Greu!");
         switch (level) {
             case "usor": {
@@ -58,6 +59,9 @@ public class HangMan implements AbstractGame {
      * @throws IOException
      */
     public  void welcome() throws IOException {
+        clientThread.sendMessageWithoutWaitingForResponse(" ");
+        clientThread.sendMessageWithoutWaitingForResponse(" ");
+        clientThread.sendMessageWithoutWaitingForResponse(" ");
         clientThread.sendMessageWithoutWaitingForResponse("Salut " + clientThread.getUser().getUsername() + " si bine ai venit la jocul Spânzurătoarea!");
         clientThread.sendMessageWithoutWaitingForResponse("Regulile sunt dupa cum urmeaza:");
         clientThread.sendMessageWithoutWaitingForResponse("\t- incearca sa ghicesti pe rand fiecare litera pana cuvantul se umple;");
@@ -87,7 +91,8 @@ public class HangMan implements AbstractGame {
      */
     public  void hangImage() throws IOException {
         if (lifes == 6) {
-            clientThread.sendMessageWithoutWaitingForResponse("Nu ai nimerit, reincearca!");
+            clientThread.sendMessageWithoutWaitingForResponse(" ");
+            clientThread.sendMessageWithoutWaitingForResponse("Nu ai nimerit, mai incearca!");
             clientThread.sendMessageWithoutWaitingForResponse(" ");
             clientThread.sendMessageWithoutWaitingForResponse(" ");
             clientThread.sendMessageWithoutWaitingForResponse(" ");
@@ -96,7 +101,8 @@ public class HangMan implements AbstractGame {
             clientThread.sendMessageWithoutWaitingForResponse("___|___");
         }
         if (lifes == 5) {
-            clientThread.sendMessageWithoutWaitingForResponse("Nu ai nimerit, reincearca!");
+            clientThread.sendMessageWithoutWaitingForResponse(" ");
+            clientThread.sendMessageWithoutWaitingForResponse("Nu ai nimerit, mai incearca!");
             clientThread.sendMessageWithoutWaitingForResponse("   |");
             clientThread.sendMessageWithoutWaitingForResponse("   |");
             clientThread.sendMessageWithoutWaitingForResponse("   |");
@@ -107,7 +113,8 @@ public class HangMan implements AbstractGame {
             clientThread.sendMessageWithoutWaitingForResponse("___|___");
         }
         if (lifes == 4) {
-            clientThread.sendMessageWithoutWaitingForResponse("Nu ai nimerit, reincearca!");
+            clientThread.sendMessageWithoutWaitingForResponse(" ");
+            clientThread.sendMessageWithoutWaitingForResponse("Nu ai nimerit, mai incearca!");
             clientThread.sendMessageWithoutWaitingForResponse("   ____________");
             clientThread.sendMessageWithoutWaitingForResponse("   | ");
             clientThread.sendMessageWithoutWaitingForResponse("   | ");
@@ -119,7 +126,8 @@ public class HangMan implements AbstractGame {
             clientThread.sendMessageWithoutWaitingForResponse("___|___");
         }
         if (lifes == 3) {
-            clientThread.sendMessageWithoutWaitingForResponse("Nu ai nimerit, reincearca!");
+            clientThread.sendMessageWithoutWaitingForResponse(" ");
+            clientThread.sendMessageWithoutWaitingForResponse("Nu ai nimerit, mai incearca!");
             clientThread.sendMessageWithoutWaitingForResponse("   ____________");
             clientThread.sendMessageWithoutWaitingForResponse("   |          _|_");
             clientThread.sendMessageWithoutWaitingForResponse("   |         /   \\");
@@ -131,7 +139,8 @@ public class HangMan implements AbstractGame {
             clientThread.sendMessageWithoutWaitingForResponse("___|___");
         }
         if (lifes == 2) {
-            clientThread.sendMessageWithoutWaitingForResponse("Nu ai nimerit, reincearca!");
+            clientThread.sendMessageWithoutWaitingForResponse(" ");
+            clientThread.sendMessageWithoutWaitingForResponse("Nu ai nimerit, mai incearca!");
             clientThread.sendMessageWithoutWaitingForResponse("   ____________");
             clientThread.sendMessageWithoutWaitingForResponse("   |          _|_");
             clientThread.sendMessageWithoutWaitingForResponse("   |         /   \\");
@@ -143,7 +152,8 @@ public class HangMan implements AbstractGame {
             clientThread.sendMessageWithoutWaitingForResponse("___|___");
         }
         if (lifes == 1) {
-            clientThread.sendMessageWithoutWaitingForResponse("Nu ai nimerit, reincearca!");
+            clientThread.sendMessageWithoutWaitingForResponse(" ");
+            clientThread.sendMessageWithoutWaitingForResponse("Nu ai nimerit, mai incearca!");
             clientThread.sendMessageWithoutWaitingForResponse("   ____________");
             clientThread.sendMessageWithoutWaitingForResponse("   |          _|_");
             clientThread.sendMessageWithoutWaitingForResponse("   |         /   \\");
@@ -155,6 +165,7 @@ public class HangMan implements AbstractGame {
             clientThread.sendMessageWithoutWaitingForResponse("___|___      /   \\");
         }
         if (lifes == 0) {
+            clientThread.sendMessageWithoutWaitingForResponse(" ");
             clientThread.sendMessageWithoutWaitingForResponse("AI PIERDUT!");
             clientThread.sendMessageWithoutWaitingForResponse("   ____________");
             clientThread.sendMessageWithoutWaitingForResponse("   |          _|_");
@@ -165,6 +176,8 @@ public class HangMan implements AbstractGame {
             clientThread.sendMessageWithoutWaitingForResponse("   |         / | \\");
             clientThread.sendMessageWithoutWaitingForResponse("   |          / \\ ");
             clientThread.sendMessageWithoutWaitingForResponse("___|___      /   \\");
+            clientThread.sendMessageWithoutWaitingForResponse(" ");
+            clientThread.sendMessageWithoutWaitingForResponse(" ");
             clientThread.sendMessageWithoutWaitingForResponse("AI PIERDUT! Cuvantul era: " + wordToGuess.getText());
         }
     }
@@ -176,11 +189,12 @@ public class HangMan implements AbstractGame {
      * @param guess
      * @throws IOException
      */
-    public  void checkLetter(String guess) throws IOException {
+    public void checkLetter(String guess) throws IOException {
 
         String newWord = "";
         for (int index = 0; index < wordToGuess.getText().length(); index++) {
             if (wordGuessed.getText().charAt(index) == guess.charAt(0)) {
+                clientThread.sendMessageWithoutWaitingForResponse(" ");
                 clientThread.sendMessageWithoutWaitingForResponse("Deja ai ghicit aceasta litera! Incearca una noua!");
                 return;
             }
@@ -199,6 +213,8 @@ public class HangMan implements AbstractGame {
             wordGuessed.setText(newWord);
         }
         if (wordGuessed.getText().equals(wordToGuess.getText())) {
+            clientThread.sendMessageWithoutWaitingForResponse(" ");
+            clientThread.sendMessageWithoutWaitingForResponse(" ");
             clientThread.sendMessageWithoutWaitingForResponse("Corect! Ai castigat! Cuvantul era: ");
             clientThread.sendMessageWithoutWaitingForResponse(">>> " + wordToGuess.getText() + " <<<");
             lifes = 0;
@@ -214,6 +230,7 @@ public class HangMan implements AbstractGame {
 
             hangmanScore.setScore(hangmanScore.getScore() + 1);
             ScoreController.updateHangmanScore(hangmanScore);
+            clientThread.sendMessageWithoutWaitingForResponse(" ");
             clientThread.sendMessageWithoutWaitingForResponse("Ai primit un punct!");
 
             return;
@@ -230,8 +247,10 @@ public class HangMan implements AbstractGame {
         gameLevel();
         initGuess();
         while (lifes > 0) {
+            clientThread.sendMessageWithoutWaitingForResponse(" ");
             clientThread.sendMessageWithoutWaitingForResponse("Pana acum, ai ghicit cuvantul:");
             clientThread.sendMessageWithoutWaitingForResponse("  >> " + wordGuessed.getText() + " <<");
+            clientThread.sendMessageWithoutWaitingForResponse(" ");
             String letter = clientThread.sendMessageAndWaitForResponse("Ghiceste o noua litera:");
 
             if (letter.length() > 1) {

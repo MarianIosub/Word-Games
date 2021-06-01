@@ -11,12 +11,11 @@ import java.util.List;
 public class Server {
     private static Server instance = null;
     private static final int PORT = 2021;
-    private ServerSocket serverSocket;
 
+    private ServerSocket serverSocket;
     private List<ClientThread> clientThreads;
 
-    private Server() {
-    }
+    private Server() { }
 
     public static Server getInstance() {
         if (instance == null) {

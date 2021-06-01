@@ -34,6 +34,9 @@ public class TypeFast implements AbstractGame {
      * @throws IOException
      */
     private void Welcome() throws IOException {
+        clientThread.sendMessageWithoutWaitingForResponse(" ");
+        clientThread.sendMessageWithoutWaitingForResponse(" ");
+        clientThread.sendMessageWithoutWaitingForResponse(" ");
         clientThread.sendMessageWithoutWaitingForResponse("Salut " + clientThread.getUser().getUsername() + " si bine ai venit la \"Fast typing words!\"!");
         clientThread.sendMessageWithoutWaitingForResponse("Scopul acestui joc este de a vedea cat de rapid poti sa scrii!");
         clientThread.sendMessageWithoutWaitingForResponse("Astfel incat incearca sa scrii cat mai multe cuvinte corecte");
@@ -77,16 +80,16 @@ public class TypeFast implements AbstractGame {
      * @throws IOException
      */
     private void checkWord() throws IOException {
+        clientThread.sendMessageWithoutWaitingForResponse(" ");
         clientThread.sendMessageWithoutWaitingForResponse("Cuvintele care trebuie scrise sunt: ");
-        //STREAMS
-        //STREAMS
-        //STREAMS
+
         String stringBuilder = words.stream().map(word -> word.getText() + ", ").collect(Collectors.joining());
         clientThread.sendMessageWithoutWaitingForResponse(stringBuilder);
         if(timeElapsed() >= 60) return;
 
         Word wordRead = new Word();
 
+        clientThread.sendMessageWithoutWaitingForResponse(" ");
         wordRead.setText(clientThread.sendMessageAndWaitForResponse("Introdu cuvantul rapid "));
         if(timeElapsed() >= 60) return;
 
@@ -107,6 +110,9 @@ public class TypeFast implements AbstractGame {
     public void end() throws IOException {
         long elapsedSeconds = timeElapsed();
 
+        clientThread.sendMessageWithoutWaitingForResponse(" ");
+        clientThread.sendMessageWithoutWaitingForResponse(" ");
+        clientThread.sendMessageWithoutWaitingForResponse(" ");
         clientThread.sendMessageWithoutWaitingForResponse("In " + Long.min(elapsedSeconds, 60) + " secunde ai scris: ");
         clientThread.sendMessageWithoutWaitingForResponse("  >> " + (correctWords+badWords) + " cuvinte");
         clientThread.sendMessageWithoutWaitingForResponse("  >> " + correctWords + " cuvinte corecte");
@@ -138,6 +144,7 @@ public class TypeFast implements AbstractGame {
 
             typeFastScore.setScore(typeFastScore.getScore() + 1);
             ScoreController.updateTypeFastScore(typeFastScore);
+            clientThread.sendMessageWithoutWaitingForResponse(" ");
             clientThread.sendMessageWithoutWaitingForResponse("Ai primit un punct!");
         }
     }
@@ -152,6 +159,8 @@ public class TypeFast implements AbstractGame {
         Welcome();
         setStartTime(System.currentTimeMillis());
         while (timeElapsed() <= 60 && words.size() != 0) {
+            clientThread.sendMessageWithoutWaitingForResponse(" ");
+            clientThread.sendMessageWithoutWaitingForResponse(" ");
             clientThread.sendMessageWithoutWaitingForResponse("S-au scurs: " + timeElapsed() + " secunde.");
             checkWord();
         }
