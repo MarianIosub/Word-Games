@@ -2,6 +2,7 @@
 Word Games using Java.
 
 Word games este un set de jocuri bazate pe cuvinte in limba romana, care cuprinde: Fazan, Spanzuratoarea, Type-Fast.
+Acest proiect a fost dezvoltat pentru laboratorul cursului de Java impreuna cu <code>[Alin Ursu](https://github.com/ursualin7890)</code>, sub indrumarea lui <code>[Cosmin Irimia](https://github.com/irimiacosmin)</code>.
 
 Intructiuni de folosire a aplicatiei :
 - Se creaza o baza de date cu fisierul gasit in WORD_GAMES_AUXILIARY
