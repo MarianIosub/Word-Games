@@ -19,7 +19,7 @@ La baza jocurilor stau urmatoarele tehnologii:
 - Logica jocurilor se desfasoara pe partea de server, clientul doar interactionand cu mutarile celorlalti jucatori(FAZAN) sau cu regulile jocului in sine(Spanzuratoare, Type-Fast)
 - La finalul unui joc se acorda puncte jucatorilor care: FAZAN - celor care nu o pierdut, Spanzuratoare - celui care a reusit sa ghiceasca cuvantul, Type-Fast - daca a scris mai multe cuvinte corecte decat gresite
 
-Descrierea jocurilor:
+Descrierea jocurilor:<br>
     Fazan: - Se poate juca in minim 2 playeri
            - Sever-ul se ocupa de ordinea introducerii cuvintelor de catre playeri
            - Cuvintele introduce sunt verificate in baza de date daca acestea exista
